@@ -1,6 +1,6 @@
 package visao;
-import modelo.dto.DTOCliente;
-import modelo.dao.DAOCliente;
+
+import controle.CTRLCliente;
 import java.awt.event.KeyEvent;
 import java.sql.*;
 import javax.swing.table.DefaultTableModel;
@@ -14,10 +14,12 @@ import visao.Opcoes;
 
 public class Clientes extends javax.swing.JFrame {
 
-    DAOCliente clientetemp = new DAOCliente();
+    private CTRLCliente ctrlCliente; // Instância do controlador
+    
 
     public Clientes() {
         initComponents();//Iniciar componentes
+        ctrlCliente = new CTRLCliente(); // Inicializa o controlador
         exibir();//chama a função de exibir no inicio do código
         this.setResizable(false);// Define o tamanho fixo da janela
         this.setMaximumSize(getSize());// Impede a maximização
@@ -31,83 +33,96 @@ public class Clientes extends javax.swing.JFrame {
 
     //função de exibir os dados na tela
     private void exibir() {
-        //Criação da variavel responsavel pela parte visual da tabela
-        //Conexão com a tabela já ciada
         DefaultTableModel dtm = (DefaultTableModel) jTClientes.getModel();
-        //Setando o valor padrão de linhas para 0
-        dtm.setNumRows(0);
-        //Criando um array que irá armazenar os valores pegos na variavel da classe
-        List<DTOCliente> clientes = clientetemp.listarTodos();
-        //Cria um loop para veririficar os dados da variavel livros
-        for (DTOCliente cliente : clientes) {
-            //Adiciona um item em uma linha de um array correspondente com a linha na tabela do livros
-            dtm.addRow(new Object[]{
-                cliente.getIdCliente(),
-                cliente.getNome(),
-                cliente.getEmail(),
-                cliente.getEndereco(),
-                cliente.getTelefone(),
-                cliente.getNascimento()
-            });
+        dtm.setNumRows(0); // Limpa a tabela
+
+        try {
+            // Chama o controlador para obter a lista de clientes
+            List<String[]> clientes = ctrlCliente.listarClientes();
+
+            // Preenche a tabela com os dados retornados
+            for (String[] cliente : clientes) {
+                dtm.addRow(cliente);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Erro ao listar clientes: " + e.getMessage());
         }
     }
 
-    //função de exibir os dados na tela
-
+    //função para salvar os dados na tabela
     private void salvar() {
-        //Captura os dados da linha de um respectivo item (capturado com o id
-        //As váriaveis com os identificadores txt representam os campos de texto na interface gráfica
+    try {
+        // Captura os dados dos campos de texto
         String nome = txtnome.getText();
         String email = txtemail.getText();
         String endereco = txtendereco.getText();
         String telefone = txttelefone.getText();
         String nascimento = txtnascimento.getText();
 
-        //Cria uma variavel para armazenar os valores capturados pelo o método
-        DTOCliente cliente = new DTOCliente(0, nome, email, endereco, telefone, nascimento);
-        clientetemp.salvar(cliente);
-        limpar();
-        exibir(); // Atualiza a lista na interface
-    }
+        // Chama o controlador para salvar o cliente
+        ctrlCliente.salvarCliente(nome, email, endereco, telefone, nascimento);
 
-//Função para excluir na tabela
+        // Exibe uma mensagem de sucesso
+        JOptionPane.showMessageDialog(null, "Cliente salvo com sucesso.");
+
+        // Limpa os campos e atualiza a tabela
+        limpar();
+        exibir();
+    } catch (Exception e) {
+        // Exibe uma mensagem de erro
+        JOptionPane.showMessageDialog(null, "Erro ao salvar cliente: " + e.getMessage());
+    }
+}
+
+      //Função para excluir na tabela
     private void excluir() {
         //Captura o id do cliente capturado pelo campo de texto e convere ele para um número inteiro
         int idCliente = Integer.parseInt(txtid.getText());
         //aplica o método excluir no id livro
-        clientetemp.excluir(idCliente);
+        ctrlCliente.excluirCliente(idCliente);
         limpar();
         exibir(); // Atualiza a lista na interface
     }
 
     private void preencherCamposPorId() {
-        String idText = txtid.getText(); // Obtém o texto do campo txtid
-        if (idText == null || idText.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Insira um ID válido.");
-            return;
-        }
+    String idText = txtid.getText(); // Obtém o texto do campo txtid
 
-        try {
-            int idCliente = Integer.parseInt(idText); // Converte o texto para número inteiro
-            DTOCliente cliente = clientetemp.buscarPorId(idCliente); // Busca o cliente pelo ID
-
-            if (cliente != null) {
-                // Preenche os campos de texto com os dados do cliente
-                txtnome.setText(cliente.getNome());
-                txtemail.setText(cliente.getEmail());
-                txtendereco.setText(cliente.getEndereco());
-                txttelefone.setText(cliente.getTelefone());
-                txtnascimento.setText(cliente.getNascimento());
-            } else {
-                JOptionPane.showMessageDialog(null, "Cliente com ID " + idCliente + " não encontrado.");
-                limpar(); // Limpa os campos caso o cliente não seja encontrado
-            }
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "O ID deve ser um número válido.");
-        }
+    // Verifica se o campo de ID está vazio
+    if (idText == null || idText.isEmpty()) {
+        JOptionPane.showMessageDialog(null, "Insira um ID válido.");
+        return;
     }
 
-    private void atualizarDados() {
+    try {
+        // Converte o ID para inteiro
+        int idCliente = Integer.parseInt(idText);
+
+        // Chama o controlador para buscar o cliente pelo ID
+        String[] cliente = ctrlCliente.buscarClientePorId(idCliente);
+
+        if (cliente != null) {
+            // Preenche os campos de texto com os dados do cliente
+            txtnome.setText(cliente[0]);
+            txtemail.setText(cliente[1]);
+            txtendereco.setText(cliente[2]);
+            txttelefone.setText(cliente[3]);
+            txtnascimento.setText(cliente[4]);
+        } else {
+            // Exibe uma mensagem se o cliente não for encontrado
+            JOptionPane.showMessageDialog(null, "Cliente com ID " + idCliente + " não encontrado.");
+            limpar(); // Limpa os campos
+        }
+    } catch (NumberFormatException e) {
+        // Exibe uma mensagem se o ID não for um número válido
+        JOptionPane.showMessageDialog(null, "O ID deve ser um número válido.");
+    } catch (Exception e) {
+        // Exibe uma mensagem de erro genérico
+        JOptionPane.showMessageDialog(null, "Erro ao buscar cliente: " + e.getMessage());
+    }
+}
+
+    //this one
+private void atualizarDados() {
         if (txtid.getText().trim().isEmpty()) { // Verifica se o ID está vazio
             JOptionPane.showMessageDialog(null, "Por favor, insira um ID existente.");
             return;
@@ -126,24 +141,23 @@ public class Clientes extends javax.swing.JFrame {
             return;
         }
 
-        // Captura os dados dos campos de texto
-        String nome = txtnome.getText().trim();
-        String email = txtemail.getText().trim();
-        String endereco = txtendereco.getText().trim();
-        String telefone = txttelefone.getText().trim();
-        String nascimento = txtnascimento.getText().trim();
-
-        // Cria o objeto DTOCliente com os dados capturados
-        DTOCliente cliente = new DTOCliente(idCliente, nome, email, endereco, telefone, nascimento);
-
-        // Chama o método de atualização no DAO
-        clientetemp.atualizar(cliente);
+        // Captura os dados dos campos de texto e envia para o controlador
+            ctrlCliente.atualizarCliente(
+            txtid.getText().trim(),
+            txtnome.getText().trim(),
+            txtemail.getText().trim(),
+            txtendereco.getText().trim(),
+            txttelefone.getText().trim(),
+            txtnascimento.getText().trim()
+        );
 
         // Atualiza a tabela exibida na interface
         exibir();
     }
 
     private void buscar() {
+    try {
+        // Captura os critérios de busca dos campos de texto
         String id = txtid.getText();
         String nome = txtnome.getText();
         String email = txtemail.getText();
@@ -151,23 +165,20 @@ public class Clientes extends javax.swing.JFrame {
         String telefone = txttelefone.getText();
         String nascimento = txtnascimento.getText();
 
-        DAOCliente clienteDAO = new DAOCliente();
-        List<DTOCliente> clientes = clienteDAO.buscarClientes(id, nome, email, endereco, telefone, nascimento);
+        // Chama o controlador para buscar os clientes
+        List<String[]> clientes = ctrlCliente.buscarClientes(id, nome, email, endereco, telefone, nascimento);
 
         // Atualiza a tabela com os resultados
         DefaultTableModel model = (DefaultTableModel) jTClientes.getModel();
         model.setRowCount(0); // Limpa a tabela
-        for (DTOCliente cliente : clientes) {
-            model.addRow(new Object[]{
-                cliente.getIdCliente(),
-                cliente.getNome(),
-                cliente.getEmail(),
-                cliente.getEndereco(),
-                cliente.getTelefone(),
-                cliente.getNascimento()
-            });
+        for (String[] cliente : clientes) {
+            model.addRow(cliente);
         }
+    } catch (Exception e) {
+        // Exibe uma mensagem de erro
+        JOptionPane.showMessageDialog(null, "Erro ao buscar clientes: " + e.getMessage());
     }
+}
 
     public void limpar() {
         txtid.setText(null);

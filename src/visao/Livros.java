@@ -596,6 +596,7 @@ public class Livros extends javax.swing.JFrame {
 
     private void btnremoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnremoverActionPerformed
         // TODO add your handling code here:
+        excluir();
     }//GEN-LAST:event_btnremoverActionPerformed
 
     private void txteditoraKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txteditoraKeyPressed

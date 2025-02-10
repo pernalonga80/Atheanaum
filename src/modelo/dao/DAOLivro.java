@@ -58,7 +58,7 @@ public class DAOLivro {
             //Se as linhas afetadas forem maior que 0 ele abre a janela para falar que o livro foi excluido com sucesso
             if (linhasAfetadas > 0) {
                 JOptionPane.showMessageDialog(null, "Livro excluído com sucesso.");
-            } else {
+            } else { 
                 //Se as linhas afetadas forem menor que 0 falará que nenhum id foi encontrado
                 JOptionPane.showMessageDialog(null, "Nenhum livro encontrado com o ID informado.");
             }
