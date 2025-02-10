@@ -5,7 +5,6 @@ import visao.Livros;//Importa a classe Interface
 import java.sql.*;//Importa todos os itens da bibliioteca sql
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JOptionPane;//Importa as Janelas que serão úteis para indicar os tratamentos de erros
 
 // Classe responsável pela interação com o banco de dados para manipular informações de livros
 public class DAOLivro {
@@ -33,10 +32,7 @@ public class DAOLivro {
 
             // Executa o comando SQL
             pst.executeUpdate();
-            JOptionPane.showMessageDialog(null, "Livro inserido com sucesso.");//Cria uma Janela para falar que o livro foi cadastrado com sucesso
-        } catch (Exception e) {
-            //Mensagem de erro em caso de falha
-            JOptionPane.showMessageDialog(null, "Erro ao salvar: " + e.getMessage());//Cria uma Janela para falar que ocorreu um erro
+        } catch (Exception e) {    
         }
     }
 
@@ -56,15 +52,10 @@ public class DAOLivro {
             int linhasAfetadas = pst.executeUpdate();
 
             //Se as linhas afetadas forem maior que 0 ele abre a janela para falar que o livro foi excluido com sucesso
-            if (linhasAfetadas > 0) {
-                JOptionPane.showMessageDialog(null, "Livro excluído com sucesso.");
-            } else { 
-                //Se as linhas afetadas forem menor que 0 falará que nenhum id foi encontrado
-                JOptionPane.showMessageDialog(null, "Nenhum livro encontrado com o ID informado.");
-            }
+           
         } catch (Exception e) {
             //Aponta um erro ao excluir os livros
-            JOptionPane.showMessageDialog(null, "Erro ao excluir: " + e.getMessage());
+            
         }
     }
 
@@ -95,8 +86,6 @@ public class DAOLivro {
                 livros.add(livro);
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Erro ao listar: " + e.getMessage());
-            //Abre uma Janela indicando erros
         }
 
         return livros;
@@ -143,7 +132,6 @@ public List<DTOLivro> buscarLivros(String id, String titulo, String autor, Strin
             }
         }
     } catch (SQLException e) {
-        JOptionPane.showMessageDialog(null, "Erro ao buscar livros: " + e.getMessage());
     }
     return livros;
 }
@@ -163,13 +151,7 @@ public void atualizar(DTOLivro livro) {
 
         int linhasAfetadas = pst.executeUpdate(); // Executa a atualização
 
-        if (linhasAfetadas > 0) {
-            JOptionPane.showMessageDialog(null, "Livro atualizado com sucesso.");
-        } else {
-            JOptionPane.showMessageDialog(null, "Nenhum livro encontrado com o ID fornecido.");
-        }
     } catch (SQLException e) {
-        JOptionPane.showMessageDialog(null, "Erro ao atualizar livro: " + e.getMessage());
     }
 }
 
@@ -196,7 +178,6 @@ public void atualizar(DTOLivro livro) {
             }
         }
     } catch (SQLException e) {
-        JOptionPane.showMessageDialog(null, "Erro ao buscar livro: " + e.getMessage());
     }
     return livro;
 }

@@ -1,4 +1,5 @@
 package visao;
+import controle.CTRLLivro;
 import modelo.dto.DTOLivro;
 import modelo.dao.DAOLivro;
 import java.awt.event.KeyEvent;
@@ -12,11 +13,11 @@ import visao.Opcoes;
 
 public class Livros extends javax.swing.JFrame {
 
-    DAOLivro livrotemp = new DAOLivro();
+    private CTRLLivro ctrlLivro;
 
     public Livros() {
         initComponents();//Iniciar Componentes
-        DAOLivro livrotemp = new DAOLivro(); //variavel para "armazenar" a classe
+        ctrlLivro = new CTRLLivro(); //variavel para "armazenar" a classe
         exibir();//Exibe os dados da tabela ao iniciar
         this.setResizable(false);// Define o tamanho fixo da janela
         this.setMaximumSize(getSize());// Impede a maximização
@@ -28,96 +29,131 @@ public class Livros extends javax.swing.JFrame {
     }
 
     //função de exibir os dados na tela
-    private void exibir() {
-        //Criação da variavel responsavel pela parte visual da tabela
-        //Conexão com a tabela já ciada
-        DefaultTableModel dtm = (DefaultTableModel) jTLivros.getModel();
-        //Setando o valor padrão de linhas para 0
-        dtm.setNumRows(0);
+   private void exibir() {
+    DefaultTableModel dtm = (DefaultTableModel) jTLivros.getModel();
+    dtm.setNumRows(0); // Limpa a tabela
 
-        //Criando um array que irá armazenar os valores pegos na variavel da classe
-        List<DTOLivro> livros = livrotemp.listarTodos();
-        //Cria um loop para veririficar os dados da variavel livros
-        for (DTOLivro livro : livros) {
-            //Adiciona um item em uma linha de um array correspondente com a linha na tabela do livros
-            dtm.addRow(new Object[]{livro.getIdLivro(), livro.getTitulo(), livro.getAutor(), livro.getGenero(), livro.getDataPublicacao(), livro.getEditora()});
+    try {
+        // Chama o controlador para obter a lista de livros
+        List<String[]> livros = ctrlLivro.listarLivros();
+
+        // Preenche a tabela com os dados retornados
+        for (String[] livro : livros) {
+            dtm.addRow(livro);
         }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, "Erro ao listar livros: " + e.getMessage());
     }
+}
 
     //Função para salvar dados na tabela
     private void salvar() {
-        //Captura os dados da linha de um respectivo item (capturado com o id
-        //As váriaveis com os identificadores txt representam os campos de texto na interface gráfica
+    try {
+        // Captura os dados dos campos de texto
         String titulo = txttitulo.getText();
         String autor = txtautor.getText();
         String genero = txtgenero.getText();
         String dataPublicacao = txtlancamento.getText();
         String editora = txteditora.getText();
 
-        //Cria uma variavel para armazenar os valores capturados pelo o método
-        DTOLivro livro = new DTOLivro(0, titulo, autor, genero, dataPublicacao, editora);
-        livrotemp.salvar(livro);
+        // Chama o controlador para salvar o livro
+        ctrlLivro.salvarLivro(titulo, autor, genero, dataPublicacao, editora);
+
+        // Exibe uma mensagem de sucesso
+        JOptionPane.showMessageDialog(null, "Livro salvo com sucesso.");
+
+        // Limpa os campos e atualiza a tabela
         limpar();
-        exibir(); // Atualiza a lista na interface
+        exibir();
+    } catch (Exception e) {
+        // Exibe uma mensagem de erro
+        JOptionPane.showMessageDialog(null, "Erro ao salvar livro: " + e.getMessage());
     }
+}
 
     //Função para excluir na tabela
     private void excluir() {
-        //Captura o id do livro capturado pelo campo de texto e convere ele para um número inteiro
+    try {
+        // Captura o ID do livro
         int idLivro = Integer.parseInt(txtid.getText());
-        //aplica o método excluir no id livro
-        livrotemp.excluir(idLivro);
+
+        // Chama o controlador para excluir o livro
+        ctrlLivro.excluirLivro(idLivro);
+
+        // Exibe uma mensagem de sucesso
+        JOptionPane.showMessageDialog(null, "Livro excluído com sucesso.");
+
+        // Limpa os campos e atualiza a tabela
         limpar();
-        exibir(); // Atualiza a lista na interface
+        exibir();
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(null, "O ID deve ser um número válido.");
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, "Erro ao excluir livro: " + e.getMessage());
     }
+}
     // Funçao para exibir dados na tabela
 
     private void preencherCamposPorId() {
-        String idText = txtid.getText(); // Obtém o texto do campo txtid
-        if (idText == null || idText.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Insira um ID válido.");
-            return;
-        }
+    String idText = txtid.getText(); // Obtém o texto do campo txtid
 
-        try {
-            int idLivro = Integer.parseInt(idText); // Converte o texto para número inteiro
-            DTOLivro livro = livrotemp.buscarPorId(idLivro); // Busca o cliente pelo ID
-
-            if (livro != null) {
-                // Preenche os campos de texto com os dados do cliente
-                txttitulo.setText(livro.getTitulo());
-                txtautor.setText(livro.getAutor());
-                txtgenero.setText(livro.getGenero());
-                txtlancamento.setText(livro.getDataPublicacao());
-                txteditora.setText(livro.getEditora());
-            } else {
-                JOptionPane.showMessageDialog(null, "Livro com ID " + idLivro + " não encontrado.");
-                limpar(); // Limpa os campos caso o cliente não seja encontrado
-            }
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "O ID deve ser um número válido.");
-        }
+    // Verifica se o campo de ID está vazio
+    if (idText == null || idText.isEmpty()) {
+        JOptionPane.showMessageDialog(null, "Insira um ID válido.");
+        return;
     }
 
+    try {
+        // Converte o ID para inteiro
+        int idLivro = Integer.parseInt(idText);
+
+        // Chama o controlador para buscar o livro pelo ID
+        String[] livro = ctrlLivro.buscarLivroPorId(idLivro);
+
+        if (livro != null) {
+            // Preenche os campos de texto com os dados do livro
+            txttitulo.setText(livro[0]);
+            txtautor.setText(livro[1]);
+            txtgenero.setText(livro[2]);
+            txtlancamento.setText(livro[3]);
+            txteditora.setText(livro[4]);
+        } else {
+            // Exibe uma mensagem se o livro não for encontrado
+            JOptionPane.showMessageDialog(null, "Livro com ID " + idLivro + " não encontrado.");
+            limpar(); // Limpa os campos
+        }
+    } catch (NumberFormatException e) {
+        // Exibe uma mensagem se o ID não for um número válido
+        JOptionPane.showMessageDialog(null, "O ID deve ser um número válido.");
+    } catch (Exception e) {
+        // Exibe uma mensagem de erro genérico
+        JOptionPane.showMessageDialog(null, "Erro ao buscar livro: " + e.getMessage());
+    }
+}
+
     private void atualizarDados() {
-        if (txtid.getText().trim().isEmpty()) { // Verifica se o ID está vazio
-            JOptionPane.showMessageDialog(null, "Por favor, insira um ID existente.");
-            return;
-        }
+    // Verifica se o campo de ID está vazio
+    if (txtid.getText().trim().isEmpty()) {
+        JOptionPane.showMessageDialog(null, "Por favor, insira um ID existente.");
+        return;
+    }
 
-        int idLivro;
-        try {
-            idLivro = Integer.parseInt(txtid.getText().trim()); // Converte o ID para inteiro
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "O ID deve ser um número válido.");
-            return;
-        }
+    int idLivro;
+    try {
+        // Converte o ID para inteiro
+        idLivro = Integer.parseInt(txtid.getText().trim());
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(null, "O ID deve ser um número válido.");
+        return;
+    }
 
-        if (camposVazios()) { // Verifica se há campos vazios
-            JOptionPane.showMessageDialog(null, "Preencha pelo menos um campo além do ID.");
-            return;
-        }
+    // Verifica se há campos vazios
+    if (camposVazios()) {
+        JOptionPane.showMessageDialog(null, "Preencha pelo menos um campo além do ID.");
+        return;
+    }
 
+    try {
         // Captura os dados dos campos de texto
         String titulo = txttitulo.getText().trim();
         String autor = txtautor.getText().trim();
@@ -125,15 +161,19 @@ public class Livros extends javax.swing.JFrame {
         String lancamento = txtlancamento.getText().trim();
         String editora = txteditora.getText().trim();
 
-        // Cria o objeto Cliente com os dados capturados
-        DTOLivro livro = new DTOLivro(idLivro, titulo, autor, genero, lancamento, editora);
+        // Chama o controlador para atualizar o livro
+        ctrlLivro.atualizarLivro(idLivro, titulo, autor, genero, lancamento, editora);
 
-        // Chama o método de atualização no DAO
-        livrotemp.atualizar(livro);
+        // Exibe uma mensagem de sucesso
+        JOptionPane.showMessageDialog(null, "Livro atualizado com sucesso.");
 
         // Atualiza a tabela exibida na interface
         exibir();
+    } catch (Exception e) {
+        // Exibe uma mensagem de erro
+        JOptionPane.showMessageDialog(null, "Erro ao atualizar livro: " + e.getMessage());
     }
+}
 
     //função para limpar os campos de textos
     public void limpar() {
