@@ -1,4 +1,5 @@
 package visao;
+import controle.CTRLEmprestimo;
 import modelo.dto.DTOEmprestimo;
 import modelo.dao.DAOEmprestimo;
 import java.awt.event.KeyEvent;
@@ -11,13 +12,6 @@ import javax.swing.table.DefaultTableModel;
 import visao.Opcoes;
 
 public class Emprestimos extends javax.swing.JFrame {
-
-    DAOEmprestimo emprestimoDAO = new DAOEmprestimo();
-    
-     public void setClienteId(String clienteId) {
-        txtidcliente.setText(clienteId); // Substitua txtClienteId pelo nome do JTextField correspondente
-        buscarEmprestimos();
-    }
     public Emprestimos() {
         // Iniciar Componentes
         initComponents();
@@ -33,28 +27,32 @@ public class Emprestimos extends javax.swing.JFrame {
         setTitle("Atheanaum");//Define um tituo para a Janela
         setIconImage(new ImageIcon(getClass().getResource("/visao/Pilha_de_livros.png")).getImage());
     }
-
-    // Função para exibir os dados na tela
-    private void exibir() {
-        // Criação da variável responsável pela parte visual da tabela
-        DefaultTableModel dtm = (DefaultTableModel) jTable2.getModel();
-        // Setando o valor padrão de linhas para 0
-        dtm.setNumRows(0);
-
-        // Criando um array que irá armazenar os valores pegos na variável da classe
-        List<DTOEmprestimo> emprestimos = emprestimoDAO.listarTodos();
-        // Cria um loop para verificar os dados da variável emprestimos
-        for (DTOEmprestimo emprestimo : emprestimos) {
-            // Adiciona um item em uma linha de um array correspondente com a linha na tabela de empréstimos
-            dtm.addRow(new Object[]{
-                emprestimo.getIdEmprestimo(), 
-                emprestimo.getIdCliente(), 
-                emprestimo.getIdLivro(), 
-                emprestimo.getDataEmprestimo(), 
-                emprestimo.getPrazoEmprestimo()
-            });
-        }
+    
+    
+    private CTRLEmprestimo ctrlEmprestimo;
+    
+     public void setClienteId(String clienteId) {
+        txtidcliente.setText(clienteId); // Substitua txtClienteId pelo nome do JTextField correspondente
+        buscarEmprestimos();
     }
+    private void exibir() {
+    DefaultTableModel dtm = (DefaultTableModel) jTable2.getModel();
+    dtm.setNumRows(0); // Limpa a tabela
+
+    try {
+        // Chama o controlador para obter a lista de empréstimos
+        List<String[]> emprestimos = ctrlEmprestimo.listarEmprestimos();
+
+        // Preenche a tabela com os dados retornados
+        for (String[] emprestimo : emprestimos) {
+            dtm.addRow(emprestimo);
+        }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, "Erro ao listar empréstimos: " + e.getMessage());
+    }
+}
+
+
 
     // Função para salvar dados na tabela
 private void salvar() {
@@ -62,71 +60,70 @@ private void salvar() {
         // Captura os dados dos campos de texto
         int idCliente = Integer.parseInt(txtidcliente.getText());
         int idLivro = Integer.parseInt(txtidlivro.getText());
+        String dataEmprestimo = txtdata.getText().trim();
+        String prazoEmprestimo = txtprazo.getText().trim();
 
-        // Converte as strings das datas para java.util.Date
-        java.util.Date dataEmprestimo = new SimpleDateFormat("yyyy-MM-dd").parse(txtdata.getText().trim());
-        java.util.Date prazoEmprestimo = new SimpleDateFormat("yyyy-MM-dd").parse(txtprazo.getText().trim());
+        // Chama o controlador para salvar o empréstimo
+        ctrlEmprestimo.salvarEmprestimo(idCliente, idLivro, dataEmprestimo, prazoEmprestimo);
 
-        // Cria o objeto DTOEmprestimo
-        DTOEmprestimo emprestimo = new DTOEmprestimo(0, idCliente, idLivro, dataEmprestimo, prazoEmprestimo);
+        // Exibe uma mensagem de sucesso
+        JOptionPane.showMessageDialog(null, "Empréstimo salvo com sucesso.");
 
-        // Salva no banco de dados
-        emprestimoDAO.salvar(emprestimo);
-
-        // Atualiza a interface
+        // Atualiza a tabela
         buscarEmprestimos();
     } catch (NumberFormatException e) {
-        JOptionPane.showMessageDialog(this, "Os campos ID Cliente e ID Livro devem conter apenas números.", "Erro", JOptionPane.ERROR_MESSAGE);
-    } catch (ParseException e) {
-        JOptionPane.showMessageDialog(this, "As datas devem estar no formato yyyy-MM-dd.", "Erro", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(null, "Os campos ID Cliente e ID Livro devem conter apenas números.");
     } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "Erro ao salvar o empréstimo: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(null, "Erro ao salvar empréstimo: " + e.getMessage());
     }
 }
 
 
     // Função para excluir na tabela
 private void excluir() {
-    // Verifica se o campo está vazio antes de tentar converter
     String idEmprestimoTexto = txtid_emprestimo.getText().trim();
 
+    // Verifica se o campo de ID está vazio
     if (idEmprestimoTexto.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "O campo ID do empréstimo está vazio. Por favor, preencha o campo antes de excluir.", "Erro", JOptionPane.WARNING_MESSAGE);
+        JOptionPane.showMessageDialog(null, "O campo ID do empréstimo está vazio. Por favor, preencha o campo antes de excluir.");
         return;
     }
 
     try {
-        // Converte o texto para número inteiro
+        // Converte o ID para inteiro
         int idEmprestimo = Integer.parseInt(idEmprestimoTexto);
 
-        // Chama o método de exclusão no DAO
-        emprestimoDAO.excluir(idEmprestimo);
+        // Chama o controlador para excluir o empréstimo
+        ctrlEmprestimo.excluirEmprestimo(idEmprestimo);
 
-        // Atualiza a exibição após a exclusão
-        exibir(); 
+        // Exibe uma mensagem de sucesso
+        JOptionPane.showMessageDialog(null, "Empréstimo excluído com sucesso.");
+
+        // Atualiza a tabela
+        exibir();
     } catch (NumberFormatException e) {
-        JOptionPane.showMessageDialog(this, "O ID do empréstimo deve ser um número válido.", "Erro", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(null, "O ID do empréstimo deve ser um número válido.");
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, "Erro ao excluir empréstimo: " + e.getMessage());
     }
 }
     
-    private void buscarEmprestimos() {
-    String clienteId = txtidcliente.getText().trim();
+private void buscarEmprestimos() {
+    try {
+        // Captura o ID do cliente
+        String clienteId = txtidcliente.getText().trim();
 
-    DAOEmprestimo emprestimoDAO = new DAOEmprestimo();
-    List<DTOEmprestimo> emprestimos = emprestimoDAO.buscarEmprestimosPorClienteId(clienteId);
+        // Chama o controlador para buscar os empréstimos
+        List<String[]> emprestimos = ctrlEmprestimo.buscarEmprestimosPorClienteId(clienteId);
 
-    // Atualiza a tabela com os resultados
-    DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
-    model.setRowCount(0); // Limpa a tabela
-
-    for (DTOEmprestimo emprestimo : emprestimos) {
-        model.addRow(new Object[]{
-            emprestimo.getIdEmprestimo(),
-            emprestimo.getIdCliente(),
-            emprestimo.getIdLivro(),
-            emprestimo.getDataEmprestimo(),
-            emprestimo.getPrazoEmprestimo()
-        });
+        // Atualiza a tabela com os resultados
+        DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
+        model.setRowCount(0); // Limpa a tabela
+        for (String[] emprestimo : emprestimos) {
+            model.addRow(emprestimo);
+        }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, "Erro ao buscar empréstimos: " + e.getMessage());
     }
 }
     

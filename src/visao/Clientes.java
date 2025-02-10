@@ -11,6 +11,7 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.MaskFormatter;
 import visao.Opcoes;
+import visao.Emprestimos;
 
 public class Clientes extends javax.swing.JFrame {
 

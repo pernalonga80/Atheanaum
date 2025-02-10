@@ -1,5 +1,4 @@
 package modelo.dao;
-
 import modelo.dto.DTOLivro;
 import visao.Livros;//Importa a classe Interface
 import java.sql.*;//Importa todos os itens da bibliioteca sql
@@ -8,9 +7,7 @@ import java.util.List;
 
 // Classe responsável pela interação com o banco de dados para manipular informações de livros
 public class DAOLivro {
-
     // Credenciais para conexão com o banco de dados
-
     private final String url = "jdbc:mysql://localhost:3306/sistema_bibliotecario";
     private final String usuario = "root";
     private final String senha = "";

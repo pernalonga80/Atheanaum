@@ -5,7 +5,7 @@ import modelo.dto.DTOEmprestimo;
     import java.sql.*; // Importa todos os itens da biblioteca SQL
     import java.util.ArrayList;
     import java.util.List;
-    import javax.swing.JOptionPane; // Importa as janelas que serão úteis para indicar os tratamentos de erros
+ 
 
     // Classe responsável pela interação com o banco de dados para manipular informações de empréstimos
     public class DAOEmprestimo {
@@ -35,10 +35,10 @@ import modelo.dto.DTOEmprestimo;
 
                 // Executa o comando SQL
                 pst.executeUpdate();
-                JOptionPane.showMessageDialog(null, "Empréstimo registrado com sucesso."); // Cria uma janela para falar que o empréstimo foi cadastrado com sucesso
+               
             } catch (Exception e) {
                 // Mensagem de erro em caso de falha
-                JOptionPane.showMessageDialog(null, "Erro ao salvar: " + e.getMessage()); // Cria uma janela para falar que ocorreu um erro
+             
             }
         }
 
@@ -56,15 +56,9 @@ import modelo.dto.DTOEmprestimo;
                 int linhasAfetadas = pst.executeUpdate();
 
                 // Se as linhas afetadas forem maior que 0, abre a janela para falar que o empréstimo foi excluído com sucesso
-                if (linhasAfetadas > 0) {
-                    JOptionPane.showMessageDialog(null, "Empréstimo excluído com sucesso.");
-                } else {
-                    // Se as linhas afetadas forem menor que 0, fala que nenhum id foi encontrado
-                    JOptionPane.showMessageDialog(null, "Nenhum empréstimo encontrado com o ID informado.");
-                }
             } catch (Exception e) {
                 // Aponta um erro ao excluir os empréstimos
-                JOptionPane.showMessageDialog(null, "Erro ao excluir: " + e.getMessage());
+                
             }
         }
 
@@ -92,7 +86,7 @@ import modelo.dto.DTOEmprestimo;
                     emprestimos.add(emprestimo);
                 }
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "Erro ao listar: " + e.getMessage());
+               
             }
 
             return emprestimos;
