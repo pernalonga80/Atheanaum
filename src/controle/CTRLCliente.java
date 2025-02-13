@@ -16,16 +16,16 @@ public class CTRLCliente {
     }
 
     public void salvarCliente(String nome, String email, String endereco, String telefone, String nascimento) {
-    try {
-        // Cria o objeto DTOCliente
-        DTOCliente cliente = new DTOCliente(0, nome, email, endereco, telefone, nascimento);
+        try {
+            // Cria o objeto DTOCliente
+            DTOCliente cliente = new DTOCliente(0, nome, email, endereco, telefone, nascimento);
 
-        // Chama o método do DAO para salvar o cliente
-        daoCliente.salvar(cliente);
-    } catch (SQLException e) {
-        throw new RuntimeException("Erro ao salvar cliente: " + e.getMessage());
+            // Chama o método do DAO para salvar o cliente
+            daoCliente.salvar(cliente);
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao salvar cliente: " + e.getMessage());
+        }
     }
-}
 
     public void excluirCliente(int idCliente) {
         try {
@@ -36,7 +36,7 @@ public class CTRLCliente {
         }
     }
 
-        public List<String[]> listarClientes() {
+    public List<String[]> listarClientes() {
         try {
             List<DTOCliente> clientes = daoCliente.listarTodos(); // Obtém a lista de DTOs
             List<String[]> dados = new ArrayList<>();
@@ -60,26 +60,26 @@ public class CTRLCliente {
     }
 
     public String[] buscarClientePorId(int idCliente) {
-    try {
-        // Busca o cliente no DAO
-        DTOCliente cliente = daoCliente.buscarPorId(idCliente);
+        try {
+            // Busca o cliente no DAO
+            DTOCliente cliente = daoCliente.buscarPorId(idCliente);
 
-        if (cliente != null) {
-            // Retorna os dados do cliente em um array de String
-            return new String[]{
-                cliente.getNome(),
-                cliente.getEmail(),
-                cliente.getEndereco(),
-                cliente.getTelefone(),
-                cliente.getNascimento()
-            };
-        } else {
-            return null; // Retorna null se o cliente não for encontrado
+            if (cliente != null) {
+                // Retorna os dados do cliente em um array de String
+                return new String[]{
+                    cliente.getNome(),
+                    cliente.getEmail(),
+                    cliente.getEndereco(),
+                    cliente.getTelefone(),
+                    cliente.getNascimento()
+                };
+            } else {
+                return null; // Retorna null se o cliente não for encontrado
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao buscar cliente: " + e.getMessage());
         }
-    } catch (SQLException e) {
-        throw new RuntimeException("Erro ao buscar cliente: " + e.getMessage());
     }
-}
 
     public void atualizarCliente(String id, String nome, String email, String endereco, String telefone, String nascimento) {
         try {
@@ -95,25 +95,25 @@ public class CTRLCliente {
     }
 
     public List<String[]> buscarClientes(String id, String nome, String email, String endereco, String telefone, String nascimento) {
-    try {
-        // Busca os clientes no DAO
-        List<DTOCliente> clientes = daoCliente.buscarClientes(id, nome, email, endereco, telefone, nascimento);
+        try {
+            // Busca os clientes no DAO
+            List<DTOCliente> clientes = daoCliente.buscarClientes(id, nome, email, endereco, telefone, nascimento);
 
-        // Converte a lista de DTOCliente para uma lista de String[]
-        List<String[]> dados = new ArrayList<>();
-        for (DTOCliente cliente : clientes) {
-            dados.add(new String[]{
-                String.valueOf(cliente.getIdCliente()),
-                cliente.getNome(),
-                cliente.getEmail(),
-                cliente.getEndereco(),
-                cliente.getTelefone(),
-                cliente.getNascimento()
-            });
+            // Converte a lista de DTOCliente para uma lista de String[]
+            List<String[]> dados = new ArrayList<>();
+            for (DTOCliente cliente : clientes) {
+                dados.add(new String[]{
+                    String.valueOf(cliente.getIdCliente()),
+                    cliente.getNome(),
+                    cliente.getEmail(),
+                    cliente.getEndereco(),
+                    cliente.getTelefone(),
+                    cliente.getNascimento()
+                });
+            }
+            return dados; // Retorna a lista de arrays de String
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao buscar clientes: " + e.getMessage());
         }
-        return dados; // Retorna a lista de arrays de String
-    } catch (SQLException e) {
-        throw new RuntimeException("Erro ao buscar clientes: " + e.getMessage());
     }
-}
 }

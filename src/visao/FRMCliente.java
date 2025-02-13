@@ -10,15 +10,14 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.MaskFormatter;
-import visao.Opcoes;
-import visao.Emprestimos;
+import visao.FRMOpcao;
+import visao.FRMEmprestimo;
 
-public class Clientes extends javax.swing.JFrame {
+public class FRMCliente extends javax.swing.JFrame {
 
     private CTRLCliente ctrlCliente; // Instância do controlador
-    
 
-    public Clientes() {
+    public FRMCliente() {
         initComponents();//Iniciar componentes
         ctrlCliente = new CTRLCliente(); // Inicializa o controlador
         exibir();//chama a função de exibir no inicio do código
@@ -52,30 +51,30 @@ public class Clientes extends javax.swing.JFrame {
 
     //função para salvar os dados na tabela
     private void salvar() {
-    try {
-        // Captura os dados dos campos de texto
-        String nome = txtnome.getText();
-        String email = txtemail.getText();
-        String endereco = txtendereco.getText();
-        String telefone = txttelefone.getText();
-        String nascimento = txtnascimento.getText();
+        try {
+            // Captura os dados dos campos de texto
+            String nome = txtnome.getText();
+            String email = txtemail.getText();
+            String endereco = txtendereco.getText();
+            String telefone = txttelefone.getText();
+            String nascimento = txtnascimento.getText();
 
-        // Chama o controlador para salvar o cliente
-        ctrlCliente.salvarCliente(nome, email, endereco, telefone, nascimento);
+            // Chama o controlador para salvar o cliente
+            ctrlCliente.salvarCliente(nome, email, endereco, telefone, nascimento);
 
-        // Exibe uma mensagem de sucesso
-        JOptionPane.showMessageDialog(null, "Cliente salvo com sucesso.");
+            // Exibe uma mensagem de sucesso
+            JOptionPane.showMessageDialog(null, "Cliente salvo com sucesso.");
 
-        // Limpa os campos e atualiza a tabela
-        limpar();
-        exibir();
-    } catch (Exception e) {
-        // Exibe uma mensagem de erro
-        JOptionPane.showMessageDialog(null, "Erro ao salvar cliente: " + e.getMessage());
+            // Limpa os campos e atualiza a tabela
+            limpar();
+            exibir();
+        } catch (Exception e) {
+            // Exibe uma mensagem de erro
+            JOptionPane.showMessageDialog(null, "Erro ao salvar cliente: " + e.getMessage());
+        }
     }
-}
 
-      //Função para excluir na tabela
+    //Função para excluir na tabela
     private void excluir() {
         //Captura o id do cliente capturado pelo campo de texto e convere ele para um número inteiro
         int idCliente = Integer.parseInt(txtid.getText());
@@ -86,44 +85,44 @@ public class Clientes extends javax.swing.JFrame {
     }
 
     private void preencherCamposPorId() {
-    String idText = txtid.getText(); // Obtém o texto do campo txtid
+        String idText = txtid.getText(); // Obtém o texto do campo txtid
 
-    // Verifica se o campo de ID está vazio
-    if (idText == null || idText.isEmpty()) {
-        JOptionPane.showMessageDialog(null, "Insira um ID válido.");
-        return;
-    }
-
-    try {
-        // Converte o ID para inteiro
-        int idCliente = Integer.parseInt(idText);
-
-        // Chama o controlador para buscar o cliente pelo ID
-        String[] cliente = ctrlCliente.buscarClientePorId(idCliente);
-
-        if (cliente != null) {
-            // Preenche os campos de texto com os dados do cliente
-            txtnome.setText(cliente[0]);
-            txtemail.setText(cliente[1]);
-            txtendereco.setText(cliente[2]);
-            txttelefone.setText(cliente[3]);
-            txtnascimento.setText(cliente[4]);
-        } else {
-            // Exibe uma mensagem se o cliente não for encontrado
-            JOptionPane.showMessageDialog(null, "Cliente com ID " + idCliente + " não encontrado.");
-            limpar(); // Limpa os campos
+        // Verifica se o campo de ID está vazio
+        if (idText == null || idText.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Insira um ID válido.");
+            return;
         }
-    } catch (NumberFormatException e) {
-        // Exibe uma mensagem se o ID não for um número válido
-        JOptionPane.showMessageDialog(null, "O ID deve ser um número válido.");
-    } catch (Exception e) {
-        // Exibe uma mensagem de erro genérico
-        JOptionPane.showMessageDialog(null, "Erro ao buscar cliente: " + e.getMessage());
+
+        try {
+            // Converte o ID para inteiro
+            int idCliente = Integer.parseInt(idText);
+
+            // Chama o controlador para buscar o cliente pelo ID
+            String[] cliente = ctrlCliente.buscarClientePorId(idCliente);
+
+            if (cliente != null) {
+                // Preenche os campos de texto com os dados do cliente
+                txtnome.setText(cliente[0]);
+                txtemail.setText(cliente[1]);
+                txtendereco.setText(cliente[2]);
+                txttelefone.setText(cliente[3]);
+                txtnascimento.setText(cliente[4]);
+            } else {
+                // Exibe uma mensagem se o cliente não for encontrado
+                JOptionPane.showMessageDialog(null, "Cliente com ID " + idCliente + " não encontrado.");
+                limpar(); // Limpa os campos
+            }
+        } catch (NumberFormatException e) {
+            // Exibe uma mensagem se o ID não for um número válido
+            JOptionPane.showMessageDialog(null, "O ID deve ser um número válido.");
+        } catch (Exception e) {
+            // Exibe uma mensagem de erro genérico
+            JOptionPane.showMessageDialog(null, "Erro ao buscar cliente: " + e.getMessage());
+        }
     }
-}
 
     //this one
-private void atualizarDados() {
+    private void atualizarDados() {
         if (txtid.getText().trim().isEmpty()) { // Verifica se o ID está vazio
             JOptionPane.showMessageDialog(null, "Por favor, insira um ID existente.");
             return;
@@ -137,19 +136,19 @@ private void atualizarDados() {
             return;
         }
 
-        if (verificaSeExistePeloMenosUmCampoVazio()) { // Verifica se há campos vazios
+        if (SomenteUmCampoVazio()) { // Verifica se há campos vazios
             JOptionPane.showMessageDialog(null, "Preencha pelo menos um campo além do ID.");
             return;
         }
 
         // Captura os dados dos campos de texto e envia para o controlador
-            ctrlCliente.atualizarCliente(
-            txtid.getText().trim(),
-            txtnome.getText().trim(),
-            txtemail.getText().trim(),
-            txtendereco.getText().trim(),
-            txttelefone.getText().trim(),
-            txtnascimento.getText().trim()
+        ctrlCliente.atualizarCliente(
+                txtid.getText().trim(),
+                txtnome.getText().trim(),
+                txtemail.getText().trim(),
+                txtendereco.getText().trim(),
+                txttelefone.getText().trim(),
+                txtnascimento.getText().trim()
         );
 
         // Atualiza a tabela exibida na interface
@@ -157,29 +156,29 @@ private void atualizarDados() {
     }
 
     private void buscar() {
-    try {
-        // Captura os critérios de busca dos campos de texto
-        String id = txtid.getText();
-        String nome = txtnome.getText();
-        String email = txtemail.getText();
-        String endereco = txtendereco.getText();
-        String telefone = txttelefone.getText();
-        String nascimento = txtnascimento.getText();
+        try {
+            // Captura os critérios de busca dos campos de texto
+            String id = txtid.getText();
+            String nome = txtnome.getText();
+            String email = txtemail.getText();
+            String endereco = txtendereco.getText();
+            String telefone = txttelefone.getText();
+            String nascimento = txtnascimento.getText();
 
-        // Chama o controlador para buscar os clientes
-        List<String[]> clientes = ctrlCliente.buscarClientes(id, nome, email, endereco, telefone, nascimento);
+            // Chama o controlador para buscar os clientes
+            List<String[]> clientes = ctrlCliente.buscarClientes(id, nome, email, endereco, telefone, nascimento);
 
-        // Atualiza a tabela com os resultados
-        DefaultTableModel model = (DefaultTableModel) jTClientes.getModel();
-        model.setRowCount(0); // Limpa a tabela
-        for (String[] cliente : clientes) {
-            model.addRow(cliente);
+            // Atualiza a tabela com os resultados
+            DefaultTableModel model = (DefaultTableModel) jTClientes.getModel();
+            model.setRowCount(0); // Limpa a tabela
+            for (String[] cliente : clientes) {
+                model.addRow(cliente);
+            }
+        } catch (Exception e) {
+            // Exibe uma mensagem de erro
+            JOptionPane.showMessageDialog(null, "Erro ao buscar clientes: " + e.getMessage());
         }
-    } catch (Exception e) {
-        // Exibe uma mensagem de erro
-        JOptionPane.showMessageDialog(null, "Erro ao buscar clientes: " + e.getMessage());
     }
-}
 
     public void limpar() {
         txtid.setText(null);
@@ -190,19 +189,19 @@ private void atualizarDados() {
         txtnascimento.setText(null);
     }
 
-    private boolean verificaSeExistePeloMenosUmCampoVazio() {
+    private boolean SomenteUmCampoVazio() {
         // Substitua textField1, textField2 pelos nomes dos seus JTextFields
         return txtid.getText().trim().isEmpty() || txtnome.getText().trim().isEmpty() || txtemail.getText().trim().isEmpty()
                 || txtendereco.getText().trim().isEmpty() || txttelefone.getText().trim().isEmpty() || txtnascimento.getText().trim().isEmpty();
     }
 
-    private boolean verificaSeTodosOsCamposEstaoVazios() {
+    private boolean TodosOsCamposVazios() {
         // Substitua textField1, textField2 pelos nomes dos seus JTextFields
         return txtid.getText().trim().isEmpty() && txtnome.getText().trim().isEmpty() && txtemail.getText().trim().isEmpty()
                 && txtendereco.getText().trim().isEmpty() && txttelefone.getText().trim().isEmpty() && txtnascimento.getText().trim().isEmpty();
     }
 
-    private boolean verificaSeTodosCamposEstaoVaziosSemContarID() {
+    private boolean CamposVaziosSemID() {
         // Substitua textField1, textField2 pelos nomes dos seus JTextFields
         return txtnome.getText().trim().isEmpty() && txtemail.getText().trim().isEmpty()
                 && txtendereco.getText().trim().isEmpty() && txttelefone.getText().trim().isEmpty() && txtnascimento.getText().trim().isEmpty();
@@ -259,7 +258,7 @@ private void atualizarDados() {
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(25, 93, 212));
-        jLabel2.setText("Buscar Clientes");
+        jLabel2.setText("Buscar clientes");
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel3.setText("ID");
@@ -343,7 +342,7 @@ private void atualizarDados() {
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("Clientes Cadastrados");
+        jLabel1.setText("Clientes cadastrados");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -501,7 +500,7 @@ private void atualizarDados() {
                             .addComponent(jLabel8)
                             .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel9))
-                        .addGap(0, 348, Short.MAX_VALUE))
+                        .addGap(0, 352, Short.MAX_VALUE))
                     .addComponent(txtid))
                 .addGap(18, 18, 18)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -681,7 +680,7 @@ private void atualizarDados() {
         } else if (evt.getKeyCode() == KeyEvent.VK_UP) {
             txtemail.requestFocus(); // Move o foco para o próximo JTextField
         } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            if (verificaSeExistePeloMenosUmCampoVazio()) {
+            if (SomenteUmCampoVazio()) {
                 JOptionPane.showMessageDialog(this, "Todos os campos deverão ser preenchidos");
             }
         }
@@ -696,7 +695,7 @@ private void atualizarDados() {
         } else if (evt.getKeyCode() == KeyEvent.VK_UP) {
             txtemail.requestFocus(); // Move o foco para o próximo JTextField
         } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            if (verificaSeExistePeloMenosUmCampoVazio()) {
+            if (SomenteUmCampoVazio()) {
                 JOptionPane.showMessageDialog(this, "Todos os campos deverão ser preenchidos");
             }
         }
@@ -709,7 +708,7 @@ private void atualizarDados() {
         } else if (evt.getKeyCode() == KeyEvent.VK_LEFT) {
             btncadastrar.requestFocus(); // Move o foco para o próximo JTextField
         } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            if (verificaSeExistePeloMenosUmCampoVazio()) {
+            if (SomenteUmCampoVazio()) {
                 JOptionPane.showMessageDialog(this, "Todos os campos deverão ser preenchidos");
             }
         } else if (evt.getKeyCode() == KeyEvent.VK_UP) {
@@ -719,7 +718,7 @@ private void atualizarDados() {
 
     private void btnvoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnvoltarActionPerformed
         // TODO add your handling code here:
-        new Opcoes().setVisible(true);
+        new FRMOpcao().setVisible(true);
         dispose();
     }//GEN-LAST:event_btnvoltarActionPerformed
 
@@ -734,13 +733,13 @@ private void atualizarDados() {
             if (selectedRow != -1) { // Verifica se uma linha foi selecionada
                 String clienteId = jTClientes.getValueAt(selectedRow, 0).toString(); // Obtém o ID do cliente
 
-                // Cria uma nova instância de Emprestimos
-                Emprestimos emprestimos = new Emprestimos();
+                // Cria uma nova instância de FRMEmprestimo
+                FRMEmprestimo emprestimos = new FRMEmprestimo();
 
-                // Envia o ID para o campo de texto na interface Emprestimos
+                // Envia o ID para o campo de texto na interface FRMEmprestimo
                 emprestimos.setClienteId(clienteId);
 
-                // Exibe a interface Emprestimos
+                // Exibe a interface FRMEmprestimo
                 emprestimos.setVisible(true);
 
                 // Fecha a interface atual
@@ -806,14 +805,22 @@ private void atualizarDados() {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Clientes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FRMCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Clientes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FRMCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Clientes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FRMCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Clientes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FRMCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
@@ -826,7 +833,7 @@ private void atualizarDados() {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Clientes().setVisible(true);
+                new FRMCliente().setVisible(true);
             }
         });
     }

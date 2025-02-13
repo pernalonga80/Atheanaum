@@ -1,4 +1,5 @@
 package controle;
+
 import modelo.dao.DAOLivro;
 import modelo.dto.DTOLivro;
 import java.sql.SQLException;
@@ -40,7 +41,7 @@ public class CTRLLivro {
     public void excluirLivro(int idLivro) {
         daoLivro.excluir(idLivro);
     }
-    
+
     public String[] buscarLivroPorId(int idLivro) {
         DTOLivro livro = daoLivro.buscarPorId(idLivro);
         if (livro != null) {
@@ -55,11 +56,11 @@ public class CTRLLivro {
         } else {
             return null; // Retorna null se o livro não for encontrado
         }
-}
-    
+    }
+
     public void atualizarLivro(int idLivro, String titulo, String autor, String genero, String dataPublicacao, String editora) {
         DTOLivro livro = new DTOLivro(idLivro, titulo, autor, genero, dataPublicacao, editora);
         daoLivro.atualizar(livro);
-}
-    
+    }
+
 }

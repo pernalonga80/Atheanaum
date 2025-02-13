@@ -1,13 +1,16 @@
 package modelo.dao;
+
 import modelo.dto.DTOLivro;
-import visao.Livros;//Importa a classe Interface
+import visao.FRMLivro;//Importa a classe Interface
 import java.sql.*;//Importa todos os itens da bibliioteca sql
 import java.util.ArrayList;
 import java.util.List;
 
 // Classe responsável pela interação com o banco de dados para manipular informações de livros
 public class DAOLivro {
+
     // Credenciais para conexão com o banco de dados
+
     private final String url = "jdbc:mysql://localhost:3306/sistema_bibliotecario";
     private final String usuario = "root";
     private final String senha = "";
@@ -29,7 +32,7 @@ public class DAOLivro {
 
             // Executa o comando SQL
             pst.executeUpdate();
-        } catch (Exception e) {    
+        } catch (Exception e) {
         }
     }
 
@@ -49,10 +52,9 @@ public class DAOLivro {
             int linhasAfetadas = pst.executeUpdate();
 
             //Se as linhas afetadas forem maior que 0 ele abre a janela para falar que o livro foi excluido com sucesso
-           
         } catch (Exception e) {
             //Aponta um erro ao excluir os livros
-            
+
         }
     }
 
@@ -87,96 +89,97 @@ public class DAOLivro {
 
         return livros;
     }
-    
+
     // Método para buscar livros com filtros dinâmicos
-public List<DTOLivro> buscarLivros(String id, String titulo, String autor, String genero, String dataPublicacao, String editora) {
-    List<DTOLivro> livros = new ArrayList<>();
-    String query = "SELECT * FROM livros WHERE "
-            + "(? IS NULL OR id_livro = ?) AND "
-            + "(? IS NULL OR titulo LIKE ?) AND "
-            + "(? IS NULL OR autor LIKE ?) AND "
-            + "(? IS NULL OR genero LIKE ?) AND "
-            + "(? IS NULL OR data_publicacao = ?) AND "
-            + "(? IS NULL OR editora LIKE ?)";
+    public List<DTOLivro> buscarLivros(String id, String titulo, String autor, String genero, String dataPublicacao, String editora) {
+        List<DTOLivro> livros = new ArrayList<>();
+        String query = "SELECT * FROM livros WHERE "
+                + "(? IS NULL OR id_livro = ?) AND "
+                + "(? IS NULL OR titulo LIKE ?) AND "
+                + "(? IS NULL OR autor LIKE ?) AND "
+                + "(? IS NULL OR genero LIKE ?) AND "
+                + "(? IS NULL OR data_publicacao = ?) AND "
+                + "(? IS NULL OR editora LIKE ?)";
 
-    try (Connection conn = DriverManager.getConnection(url, usuario, senha);
-         PreparedStatement pst = conn.prepareStatement(query)) {
+        try (Connection conn = DriverManager.getConnection(url, usuario, senha);
+                PreparedStatement pst = conn.prepareStatement(query)) {
 
-        // Define os parâmetros da consulta
-        pst.setString(1, id.isEmpty() ? null : id);
-        pst.setString(2, id.isEmpty() ? null : id);
-        pst.setString(3, titulo.isEmpty() ? null : "%" + titulo + "%");
-        pst.setString(4, titulo.isEmpty() ? null : "%" + titulo + "%");
-        pst.setString(5, autor.isEmpty() ? null : "%" + autor + "%");
-        pst.setString(6, autor.isEmpty() ? null : "%" + autor + "%");
-        pst.setString(7, genero.isEmpty() ? null : "%" + genero + "%");
-        pst.setString(8, genero.isEmpty() ? null : "%" + genero + "%");
-        pst.setString(9, dataPublicacao.isEmpty() ? null : dataPublicacao);
-        pst.setString(10, dataPublicacao.isEmpty() ? null : dataPublicacao);
-        pst.setString(11, editora.isEmpty() ? null : "%" + editora + "%");
-        pst.setString(12, editora.isEmpty() ? null : "%" + editora + "%");
+            // Define os parâmetros da consulta
+            pst.setString(1, id.isEmpty() ? null : id);
+            pst.setString(2, id.isEmpty() ? null : id);
+            pst.setString(3, titulo.isEmpty() ? null : "%" + titulo + "%");
+            pst.setString(4, titulo.isEmpty() ? null : "%" + titulo + "%");
+            pst.setString(5, autor.isEmpty() ? null : "%" + autor + "%");
+            pst.setString(6, autor.isEmpty() ? null : "%" + autor + "%");
+            pst.setString(7, genero.isEmpty() ? null : "%" + genero + "%");
+            pst.setString(8, genero.isEmpty() ? null : "%" + genero + "%");
+            pst.setString(9, dataPublicacao.isEmpty() ? null : dataPublicacao);
+            pst.setString(10, dataPublicacao.isEmpty() ? null : dataPublicacao);
+            pst.setString(11, editora.isEmpty() ? null : "%" + editora + "%");
+            pst.setString(12, editora.isEmpty() ? null : "%" + editora + "%");
 
-        try (ResultSet rs = pst.executeQuery()) {
-            while (rs.next()) {
-                livros.add(new DTOLivro(
-                        rs.getInt("id_livro"),
-                        rs.getString("titulo"),
-                        rs.getString("autor"),
-                        rs.getString("genero"),
-                        rs.getString("data_publicacao"),
-                        rs.getString("editora")
-                ));
+            try (ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+                    livros.add(new DTOLivro(
+                            rs.getInt("id_livro"),
+                            rs.getString("titulo"),
+                            rs.getString("autor"),
+                            rs.getString("genero"),
+                            rs.getString("data_publicacao"),
+                            rs.getString("editora")
+                    ));
+                }
             }
+        } catch (SQLException e) {
         }
-    } catch (SQLException e) {
+        return livros;
     }
-    return livros;
-}
-public void atualizar(DTOLivro livro) {
-    String query = "UPDATE livros SET titulo = ?, autor = ?, editora = ?, genero = ?, data_publicacao = ? WHERE id_livro = ?";
 
-    try (Connection conn = DriverManager.getConnection(url, usuario, senha);
-         PreparedStatement pst = conn.prepareStatement(query)) {
+    public void atualizar(DTOLivro livro) {
+        String query = "UPDATE livros SET titulo = ?, autor = ?, editora = ?, genero = ?, data_publicacao = ? WHERE id_livro = ?";
 
-        // Configura os parâmetros da consulta
-        pst.setString(1, livro.getTitulo());
-        pst.setString(2, livro.getAutor());
-        pst.setString(3, livro.getEditora());
-        pst.setString(4, livro.getGenero());
-        pst.setString(5, livro.getDataPublicacao());
-        pst.setInt(6, livro.getIdLivro());
+        try (Connection conn = DriverManager.getConnection(url, usuario, senha);
+                PreparedStatement pst = conn.prepareStatement(query)) {
 
-        int linhasAfetadas = pst.executeUpdate(); // Executa a atualização
+            // Configura os parâmetros da consulta
+            pst.setString(1, livro.getTitulo());
+            pst.setString(2, livro.getAutor());
+            pst.setString(3, livro.getEditora());
+            pst.setString(4, livro.getGenero());
+            pst.setString(5, livro.getDataPublicacao());
+            pst.setInt(6, livro.getIdLivro());
 
-    } catch (SQLException e) {
+            int linhasAfetadas = pst.executeUpdate(); // Executa a atualização
+
+        } catch (SQLException e) {
+        }
     }
-}
 
     public DTOLivro buscarPorId(int idLivro) {
-    DTOLivro livro = null; // Inicializa como nulo caso o cliente não seja encontrado
-    String query = "SELECT * FROM livros WHERE id_livro = ?";
+        DTOLivro livro = null; // Inicializa como nulo caso o cliente não seja encontrado
+        String query = "SELECT * FROM livros WHERE id_livro = ?";
 
-    try (Connection conn = DriverManager.getConnection(url, usuario, senha);
-         PreparedStatement pst = conn.prepareStatement(query)) {
+        try (Connection conn = DriverManager.getConnection(url, usuario, senha);
+                PreparedStatement pst = conn.prepareStatement(query)) {
 
-        pst.setInt(1, idLivro); // Define o parâmetro da consulta
+            pst.setInt(1, idLivro); // Define o parâmetro da consulta
 
-        try (ResultSet rs = pst.executeQuery()) {
-            if (rs.next()) {
-                // Se encontrar o cliente, cria um objeto com os dados
-                livro = new DTOLivro(
-                        rs.getInt("id_livro"),
-                        rs.getString("titulo"),
-                        rs.getString("autor"),
-                        rs.getString("genero"),
-                        rs.getString("data_publicacao"),
-                        rs.getString("editora")
-                );
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    // Se encontrar o cliente, cria um objeto com os dados
+                    livro = new DTOLivro(
+                            rs.getInt("id_livro"),
+                            rs.getString("titulo"),
+                            rs.getString("autor"),
+                            rs.getString("genero"),
+                            rs.getString("data_publicacao"),
+                            rs.getString("editora")
+                    );
+                }
             }
+        } catch (SQLException e) {
         }
-    } catch (SQLException e) {
+        return livro;
     }
-    return livro;
-}
 
 }

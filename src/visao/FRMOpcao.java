@@ -1,17 +1,19 @@
 package visao;
+
 import java.awt.event.KeyEvent;
 import javax.swing.ImageIcon;
 
-public class Opcoes extends javax.swing.JFrame {  
-    public Opcoes() {
+public class FRMOpcao extends javax.swing.JFrame {
+
+    public FRMOpcao() {
         initComponents();
-          // Define o tamanho fixo da janela
+        // Define o tamanho fixo da janela
         this.setResizable(false);
         // Impede a maximização
         this.setMaximumSize(getSize());
         //Inicializa a Janela no meio da tela
         this.setLocationRelativeTo(null);
-        
+
         setTitle("Atheanaum");//Define um tituo para a Janela
         setIconImage(new ImageIcon(getClass().getResource("/visao/Pilha_de_livros.png")).getImage());
     }
@@ -70,7 +72,7 @@ public class Opcoes extends javax.swing.JFrame {
         );
 
         labelclientes.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        labelclientes.setText("Buscar Clientes");
+        labelclientes.setText("Buscar clientes");
 
         btnlivros.setText("Buscar");
         btnlivros.addActionListener(new java.awt.event.ActionListener() {
@@ -85,7 +87,7 @@ public class Opcoes extends javax.swing.JFrame {
         });
 
         labellivros.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        labellivros.setText("Buscar Livros");
+        labellivros.setText("Buscar livros");
 
         btncliente.setText("Buscar");
         btncliente.addActionListener(new java.awt.event.ActionListener() {
@@ -117,7 +119,7 @@ public class Opcoes extends javax.swing.JFrame {
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                                 .addGap(65, 65, 65)
                                 .addComponent(labellivros)))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 63, Short.MAX_VALUE)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -150,44 +152,38 @@ public class Opcoes extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnclienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnclienteActionPerformed
-         new Clientes().setVisible(true);
+        new FRMCliente().setVisible(true);
     }//GEN-LAST:event_btnclienteActionPerformed
 
     private void btnlivrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnlivrosActionPerformed
-         new Livros().setVisible(true);
+        new FRMLivro().setVisible(true);
     }//GEN-LAST:event_btnlivrosActionPerformed
 
     private void btnclienteKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btnclienteKeyPressed
         // TODO add your handling code here:
-         if (evt.getKeyCode() == KeyEvent.VK_DOWN) {
-                    btnlivros.requestFocus(); // Move o foco para o próximo JTextField
-                }
-         
-         else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-             new Clientes().setVisible(true);
-             dispose();
-                }
+        if (evt.getKeyCode() == KeyEvent.VK_DOWN) {
+            btnlivros.requestFocus(); // Move o foco para o próximo JTextField
+        } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            new FRMCliente().setVisible(true);
+            dispose();
+        }
     }//GEN-LAST:event_btnclienteKeyPressed
 
     private void btnlivrosKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btnlivrosKeyPressed
         // TODO add your handling code here:
         if (evt.getKeyCode() == KeyEvent.VK_UP) {
-                    btncliente.requestFocus(); // Move o foco para o próximo JTextField
-                }
-           
-           
-         else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-             new Livros().setVisible(true);
-             dispose();
-                }
+            btncliente.requestFocus(); // Move o foco para o próximo JTextField
+        } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            new FRMLivro().setVisible(true);
+            dispose();
+        }
     }//GEN-LAST:event_btnlivrosKeyPressed
 
     public static void main(String args[]) {
-     
-        
+
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Opcoes().setVisible(true);
+                new FRMOpcao().setVisible(true);
             }
         });
     }

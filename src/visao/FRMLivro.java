@@ -1,4 +1,5 @@
 package visao;
+
 import controle.CTRLLivro;
 import modelo.dto.DTOLivro;
 import modelo.dao.DAOLivro;
@@ -9,13 +10,13 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import visao.Opcoes;
+import visao.FRMOpcao;
 
-public class Livros extends javax.swing.JFrame {
+public class FRMLivro extends javax.swing.JFrame {
 
     private CTRLLivro ctrlLivro;
 
-    public Livros() {
+    public FRMLivro() {
         initComponents();//Iniciar Componentes
         ctrlLivro = new CTRLLivro(); //variavel para "armazenar" a classe
         exibir();//Exibe os dados da tabela ao iniciar
@@ -29,151 +30,151 @@ public class Livros extends javax.swing.JFrame {
     }
 
     //função de exibir os dados na tela
-   private void exibir() {
-    DefaultTableModel dtm = (DefaultTableModel) jTLivros.getModel();
-    dtm.setNumRows(0); // Limpa a tabela
+    private void exibir() {
+        DefaultTableModel dtm = (DefaultTableModel) jTLivros.getModel();
+        dtm.setNumRows(0); // Limpa a tabela
 
-    try {
-        // Chama o controlador para obter a lista de livros
-        List<String[]> livros = ctrlLivro.listarLivros();
+        try {
+            // Chama o controlador para obter a lista de livros
+            List<String[]> livros = ctrlLivro.listarLivros();
 
-        // Preenche a tabela com os dados retornados
-        for (String[] livro : livros) {
-            dtm.addRow(livro);
+            // Preenche a tabela com os dados retornados
+            for (String[] livro : livros) {
+                dtm.addRow(livro);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Erro ao listar livros: " + e.getMessage());
         }
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(null, "Erro ao listar livros: " + e.getMessage());
     }
-}
 
     //Função para salvar dados na tabela
     private void salvar() {
-    try {
-        // Captura os dados dos campos de texto
-        String titulo = txttitulo.getText();
-        String autor = txtautor.getText();
-        String genero = txtgenero.getText();
-        String dataPublicacao = txtlancamento.getText();
-        String editora = txteditora.getText();
+        try {
+            // Captura os dados dos campos de texto
+            String titulo = txttitulo.getText();
+            String autor = txtautor.getText();
+            String genero = txtgenero.getText();
+            String dataPublicacao = txtlancamento.getText();
+            String editora = txteditora.getText();
 
-        // Chama o controlador para salvar o livro
-        ctrlLivro.salvarLivro(titulo, autor, genero, dataPublicacao, editora);
+            // Chama o controlador para salvar o livro
+            ctrlLivro.salvarLivro(titulo, autor, genero, dataPublicacao, editora);
 
-        // Exibe uma mensagem de sucesso
-        JOptionPane.showMessageDialog(null, "Livro salvo com sucesso.");
+            // Exibe uma mensagem de sucesso
+            JOptionPane.showMessageDialog(null, "Livro salvo com sucesso.");
 
-        // Limpa os campos e atualiza a tabela
-        limpar();
-        exibir();
-    } catch (Exception e) {
-        // Exibe uma mensagem de erro
-        JOptionPane.showMessageDialog(null, "Erro ao salvar livro: " + e.getMessage());
+            // Limpa os campos e atualiza a tabela
+            limpar();
+            exibir();
+        } catch (Exception e) {
+            // Exibe uma mensagem de erro
+            JOptionPane.showMessageDialog(null, "Erro ao salvar livro: " + e.getMessage());
+        }
     }
-}
 
     //Função para excluir na tabela
     private void excluir() {
-    try {
-        // Captura o ID do livro
-        int idLivro = Integer.parseInt(txtid.getText());
+        try {
+            // Captura o ID do livro
+            int idLivro = Integer.parseInt(txtid.getText());
 
-        // Chama o controlador para excluir o livro
-        ctrlLivro.excluirLivro(idLivro);
+            // Chama o controlador para excluir o livro
+            ctrlLivro.excluirLivro(idLivro);
 
-        // Exibe uma mensagem de sucesso
-        JOptionPane.showMessageDialog(null, "Livro excluído com sucesso.");
+            // Exibe uma mensagem de sucesso
+            JOptionPane.showMessageDialog(null, "Livro excluído com sucesso.");
 
-        // Limpa os campos e atualiza a tabela
-        limpar();
-        exibir();
-    } catch (NumberFormatException e) {
-        JOptionPane.showMessageDialog(null, "O ID deve ser um número válido.");
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(null, "Erro ao excluir livro: " + e.getMessage());
+            // Limpa os campos e atualiza a tabela
+            limpar();
+            exibir();
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "O ID deve ser um número válido.");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Erro ao excluir livro: " + e.getMessage());
+        }
     }
-}
     // Funçao para exibir dados na tabela
 
     private void preencherCamposPorId() {
-    String idText = txtid.getText(); // Obtém o texto do campo txtid
+        String idText = txtid.getText(); // Obtém o texto do campo txtid
 
-    // Verifica se o campo de ID está vazio
-    if (idText == null || idText.isEmpty()) {
-        JOptionPane.showMessageDialog(null, "Insira um ID válido.");
-        return;
-    }
-
-    try {
-        // Converte o ID para inteiro
-        int idLivro = Integer.parseInt(idText);
-
-        // Chama o controlador para buscar o livro pelo ID
-        String[] livro = ctrlLivro.buscarLivroPorId(idLivro);
-
-        if (livro != null) {
-            // Preenche os campos de texto com os dados do livro
-            txttitulo.setText(livro[0]);
-            txtautor.setText(livro[1]);
-            txtgenero.setText(livro[2]);
-            txtlancamento.setText(livro[3]);
-            txteditora.setText(livro[4]);
-        } else {
-            // Exibe uma mensagem se o livro não for encontrado
-            JOptionPane.showMessageDialog(null, "Livro com ID " + idLivro + " não encontrado.");
-            limpar(); // Limpa os campos
+        // Verifica se o campo de ID está vazio
+        if (idText == null || idText.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Insira um ID válido.");
+            return;
         }
-    } catch (NumberFormatException e) {
-        // Exibe uma mensagem se o ID não for um número válido
-        JOptionPane.showMessageDialog(null, "O ID deve ser um número válido.");
-    } catch (Exception e) {
-        // Exibe uma mensagem de erro genérico
-        JOptionPane.showMessageDialog(null, "Erro ao buscar livro: " + e.getMessage());
+
+        try {
+            // Converte o ID para inteiro
+            int idLivro = Integer.parseInt(idText);
+
+            // Chama o controlador para buscar o livro pelo ID
+            String[] livro = ctrlLivro.buscarLivroPorId(idLivro);
+
+            if (livro != null) {
+                // Preenche os campos de texto com os dados do livro
+                txttitulo.setText(livro[0]);
+                txtautor.setText(livro[1]);
+                txtgenero.setText(livro[2]);
+                txtlancamento.setText(livro[3]);
+                txteditora.setText(livro[4]);
+            } else {
+                // Exibe uma mensagem se o livro não for encontrado
+                JOptionPane.showMessageDialog(null, "Livro com ID " + idLivro + " não encontrado.");
+                limpar(); // Limpa os campos
+            }
+        } catch (NumberFormatException e) {
+            // Exibe uma mensagem se o ID não for um número válido
+            JOptionPane.showMessageDialog(null, "O ID deve ser um número válido.");
+        } catch (Exception e) {
+            // Exibe uma mensagem de erro genérico
+            JOptionPane.showMessageDialog(null, "Erro ao buscar livro: " + e.getMessage());
+        }
     }
-}
 
     private void atualizarDados() {
-    // Verifica se o campo de ID está vazio
-    if (txtid.getText().trim().isEmpty()) {
-        JOptionPane.showMessageDialog(null, "Por favor, insira um ID existente.");
-        return;
+        // Verifica se o campo de ID está vazio
+        if (txtid.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Por favor, insira um ID existente.");
+            return;
+        }
+
+        int idLivro;
+        try {
+            // Converte o ID para inteiro
+            idLivro = Integer.parseInt(txtid.getText().trim());
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "O ID deve ser um número válido.");
+            return;
+        }
+
+        // Verifica se há campos vazios
+        if (SomenteUmCampoVazio()) {
+            JOptionPane.showMessageDialog(null, "Preencha pelo menos um campo além do ID.");
+            return;
+        }
+
+        try {
+            // Captura os dados dos campos de texto
+            String titulo = txttitulo.getText().trim();
+            String autor = txtautor.getText().trim();
+            String genero = txtgenero.getText().trim();
+            String lancamento = txtlancamento.getText().trim();
+            String editora = txteditora.getText().trim();
+
+            // Chama o controlador para atualizar o livro
+            ctrlLivro.atualizarLivro(idLivro, titulo, autor, genero, lancamento, editora);
+
+            // Exibe uma mensagem de sucesso
+            JOptionPane.showMessageDialog(null, "Livro atualizado com sucesso.");
+
+            // Atualiza a tabela exibida na interface
+            exibir();
+        } catch (Exception e) {
+            // Exibe uma mensagem de erro
+            JOptionPane.showMessageDialog(null, "Erro ao atualizar livro: " + e.getMessage());
+        }
     }
-
-    int idLivro;
-    try {
-        // Converte o ID para inteiro
-        idLivro = Integer.parseInt(txtid.getText().trim());
-    } catch (NumberFormatException e) {
-        JOptionPane.showMessageDialog(null, "O ID deve ser um número válido.");
-        return;
-    }
-
-    // Verifica se há campos vazios
-    if (camposVazios()) {
-        JOptionPane.showMessageDialog(null, "Preencha pelo menos um campo além do ID.");
-        return;
-    }
-
-    try {
-        // Captura os dados dos campos de texto
-        String titulo = txttitulo.getText().trim();
-        String autor = txtautor.getText().trim();
-        String genero = txtgenero.getText().trim();
-        String lancamento = txtlancamento.getText().trim();
-        String editora = txteditora.getText().trim();
-
-        // Chama o controlador para atualizar o livro
-        ctrlLivro.atualizarLivro(idLivro, titulo, autor, genero, lancamento, editora);
-
-        // Exibe uma mensagem de sucesso
-        JOptionPane.showMessageDialog(null, "Livro atualizado com sucesso.");
-
-        // Atualiza a tabela exibida na interface
-        exibir();
-    } catch (Exception e) {
-        // Exibe uma mensagem de erro
-        JOptionPane.showMessageDialog(null, "Erro ao atualizar livro: " + e.getMessage());
-    }
-}
 
     //função para limpar os campos de textos
     public void limpar() {
@@ -184,21 +185,21 @@ public class Livros extends javax.swing.JFrame {
         txtlancamento.setText(null);
         txttitulo.setText(null);
     }
-    
+
     //função para identificar se os campos de textos estão vazios
-    private boolean camposVazios() {
+    private boolean SomenteUmCampoVazio() {
         // Substitua textField1, textField2 pelos nomes dos seus JTextFields
         return txtid.getText().trim().isEmpty() || txtautor.getText().trim().isEmpty() || txteditora.getText().trim().isEmpty()
                 || txteditora.getText().trim().isEmpty() || txtgenero.getText().trim().isEmpty() || txtlancamento.getText().trim().isEmpty() || txttitulo.getText().trim().isEmpty();
     }
-    
+
     //função para ver se todos os campos de texto estão vazios
-    private boolean camposVazios2() {
+    private boolean TodosOsCamposVazios() {
         // Substitua textField1, textField2 pelos nomes dos seus JTextFields
         return txtid.getText().trim().isEmpty() && txtautor.getText().trim().isEmpty() && txteditora.getText().trim().isEmpty()
                 && txteditora.getText().trim().isEmpty() && txtgenero.getText().trim().isEmpty() && txtlancamento.getText().trim().isEmpty() && txttitulo.getText().trim().isEmpty();
     }
-    
+
     //função para filtrar os livros por cada um de seus atributos
     public void buscarLivros() {
         // Obtém os valores dos campos de texto
@@ -271,7 +272,7 @@ public class Livros extends javax.swing.JFrame {
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(25, 93, 212));
-        jLabel2.setText("Buscar Livros");
+        jLabel2.setText("Buscar livros");
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel3.setText("ID");
@@ -288,6 +289,7 @@ public class Livros extends javax.swing.JFrame {
         jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel8.setText("Data de Lançamento");
 
+        txtid.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         txtid.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtidActionPerformed(evt);
@@ -299,6 +301,7 @@ public class Livros extends javax.swing.JFrame {
             }
         });
 
+        txttitulo.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         txttitulo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txttituloActionPerformed(evt);
@@ -310,6 +313,7 @@ public class Livros extends javax.swing.JFrame {
             }
         });
 
+        txtautor.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         txtautor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtautorActionPerformed(evt);
@@ -321,6 +325,7 @@ public class Livros extends javax.swing.JFrame {
             }
         });
 
+        txtgenero.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         txtgenero.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtgeneroActionPerformed(evt);
@@ -346,7 +351,7 @@ public class Livros extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("Livros Encontrados");
+        jLabel1.setText("Livros encontrados");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -414,6 +419,7 @@ public class Livros extends javax.swing.JFrame {
         jLabel9.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel9.setText("Editora");
 
+        txteditora.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         txteditora.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txteditoraActionPerformed(evt);
@@ -462,6 +468,7 @@ public class Livros extends javax.swing.JFrame {
             }
         });
 
+        txtlancamento.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         txtlancamento.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtlancamentoActionPerformed(evt);
@@ -604,7 +611,7 @@ public class Livros extends javax.swing.JFrame {
         } else if (evt.getKeyCode() == KeyEvent.VK_UP) {
             txteditora.requestFocus();
         } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            if (camposVazios()) {
+            if (SomenteUmCampoVazio()) {
                 JOptionPane.showMessageDialog(this, "Todos os campos deverão ser preenchidos");
             }
         } else {
@@ -624,7 +631,7 @@ public class Livros extends javax.swing.JFrame {
         } else if (evt.getKeyCode() == KeyEvent.VK_LEFT) {
             btncadastrar.requestFocus(); // Move o foco para o próximo JTextField
         } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            if (camposVazios()) {
+            if (SomenteUmCampoVazio()) {
                 JOptionPane.showMessageDialog(this, "Todos os campos deverão ser preenchidos");
             }
         } else if (evt.getKeyCode() == KeyEvent.VK_UP) {
@@ -663,13 +670,13 @@ public class Livros extends javax.swing.JFrame {
         if (evt.getKeyCode() == KeyEvent.VK_UP) {
             btnbuscar.requestFocus(); // Move o foco para o próximo JTextField
         } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            new Opcoes().setVisible(true);
+            new FRMOpcao().setVisible(true);
             dispose();
         }
     }//GEN-LAST:event_btnvoltarKeyPressed
 
     private void btnvoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnvoltarActionPerformed
-        new Opcoes().setVisible(true);
+        new FRMOpcao().setVisible(true);
         dispose();
     }//GEN-LAST:event_btnvoltarActionPerformed
 
@@ -682,7 +689,7 @@ public class Livros extends javax.swing.JFrame {
         } else if (evt.getKeyCode() == KeyEvent.VK_UP) {
             txteditora.requestFocus();
         } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            if (camposVazios()) {
+            if (SomenteUmCampoVazio()) {
                 JOptionPane.showMessageDialog(this, "Todos os campos deverão ser preenchidos");
             }
         } else {
@@ -703,7 +710,7 @@ public class Livros extends javax.swing.JFrame {
         } else if (evt.getKeyCode() == KeyEvent.VK_UP) {
             txteditora.requestFocus();
         } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            if (camposVazios2()) {
+            if (TodosOsCamposVazios()) {
                 JOptionPane.showMessageDialog(this, "Todos os campos deverão ser preenchidos");
             }
         } else {
@@ -798,7 +805,7 @@ public class Livros extends javax.swing.JFrame {
 
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Livros().setVisible(true);
+                new FRMLivro().setVisible(true);
             }
         });
     }

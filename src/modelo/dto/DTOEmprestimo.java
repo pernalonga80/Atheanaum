@@ -1,7 +1,5 @@
 package modelo.dto;
 
-
-
 import java.util.Date;
 
 public class DTOEmprestimo {
@@ -74,7 +72,7 @@ public class DTOEmprestimo {
     // Método para exibir informações do empréstimo
     @Override
     public String toString() {
-        return "Empréstimo [ID Empréstimo=" + idEmprestimo + ", ID Cliente=" + idCliente + ", ID Livro=" + idLivro +
-               ", Data Empréstimo=" + dataEmprestimo + ", Prazo Empréstimo=" + prazoEmprestimo + "]";
+        return "Empréstimo [ID Empréstimo=" + idEmprestimo + ", ID Cliente=" + idCliente + ", ID Livro=" + idLivro
+                + ", Data Empréstimo=" + dataEmprestimo + ", Prazo Empréstimo=" + prazoEmprestimo + "]";
     }
 }

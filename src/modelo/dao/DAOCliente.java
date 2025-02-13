@@ -14,7 +14,7 @@ public class DAOCliente {
     public void salvar(DTOCliente cliente) throws SQLException {
         String query = "INSERT INTO clientes (nome,email,endereco,telefone,nascimento) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DriverManager.getConnection(url, usuario, senha);
-             PreparedStatement pst = conn.prepareStatement(query)) {
+                PreparedStatement pst = conn.prepareStatement(query)) {
             pst.setString(1, cliente.getNome());
             pst.setString(2, cliente.getEmail());
             pst.setString(3, cliente.getEndereco());
@@ -27,7 +27,7 @@ public class DAOCliente {
     public void excluir(int idCliente) throws SQLException {
         String query = "DELETE FROM clientes WHERE id_cliente = ?";
         try (Connection conn = DriverManager.getConnection(url, usuario, senha);
-             PreparedStatement pst = conn.prepareStatement(query)) {
+                PreparedStatement pst = conn.prepareStatement(query)) {
             pst.setInt(1, idCliente);
             pst.executeUpdate();
         }
@@ -37,8 +37,8 @@ public class DAOCliente {
         List<DTOCliente> clientes = new ArrayList<>();
         String query = "SELECT * FROM clientes";
         try (Connection conn = DriverManager.getConnection(url, usuario, senha);
-             Statement st = conn.createStatement();
-             ResultSet rs = st.executeQuery(query)) {
+                Statement st = conn.createStatement();
+                ResultSet rs = st.executeQuery(query)) {
             while (rs.next()) {
                 DTOCliente cliente = new DTOCliente(
                         rs.getInt("id_cliente"),
@@ -58,7 +58,7 @@ public class DAOCliente {
         DTOCliente cliente = null;
         String query = "SELECT * FROM clientes WHERE id_cliente = ?";
         try (Connection conn = DriverManager.getConnection(url, usuario, senha);
-             PreparedStatement pst = conn.prepareStatement(query)) {
+                PreparedStatement pst = conn.prepareStatement(query)) {
             pst.setInt(1, idCliente);
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
@@ -79,7 +79,7 @@ public class DAOCliente {
     public void atualizar(DTOCliente cliente) throws SQLException {
         String query = "UPDATE clientes SET nome = ?, email = ?, endereco = ?, telefone = ?, nascimento = ? WHERE id_cliente = ?";
         try (Connection conn = DriverManager.getConnection(url, usuario, senha);
-             PreparedStatement pst = conn.prepareStatement(query)) {
+                PreparedStatement pst = conn.prepareStatement(query)) {
             pst.setString(1, cliente.getNome());
             pst.setString(2, cliente.getEmail());
             pst.setString(3, cliente.getEndereco());
@@ -113,7 +113,7 @@ public class DAOCliente {
         }
 
         try (Connection conn = DriverManager.getConnection(url, usuario, senha);
-             PreparedStatement pst = conn.prepareStatement(query)) {
+                PreparedStatement pst = conn.prepareStatement(query)) {
             int index = 1;
             if (id != null && !id.isEmpty()) {
                 pst.setInt(index++, Integer.parseInt(id));

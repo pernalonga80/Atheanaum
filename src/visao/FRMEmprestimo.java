@@ -1,4 +1,5 @@
 package visao;
+
 import controle.CTRLEmprestimo;
 import modelo.dto.DTOEmprestimo;
 import modelo.dao.DAOEmprestimo;
@@ -9,12 +10,14 @@ import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import visao.Opcoes;
+import visao.FRMOpcao;
 
-public class Emprestimos extends javax.swing.JFrame {
-    public Emprestimos() {
+public class FRMEmprestimo extends javax.swing.JFrame {
+
+    public FRMEmprestimo() {
         // Iniciar Componentes
         initComponents();
+        ctrlEmprestimo = new CTRLEmprestimo(); // Inicialize o controlador
         buscarEmprestimos();
         txtid_emprestimo.requestFocus();
         // Define o tamanho fixo da janela
@@ -23,137 +26,131 @@ public class Emprestimos extends javax.swing.JFrame {
         this.setMaximumSize(getSize());
         buscarEmprestimos();
         this.setLocationRelativeTo(null);
-        
+
         setTitle("Atheanaum");//Define um tituo para a Janela
         setIconImage(new ImageIcon(getClass().getResource("/visao/Pilha_de_livros.png")).getImage());
     }
-    
-    
+
     private CTRLEmprestimo ctrlEmprestimo;
-    
-     public void setClienteId(String clienteId) {
+
+    public void setClienteId(String clienteId) {
         txtidcliente.setText(clienteId); // Substitua txtClienteId pelo nome do JTextField correspondente
         buscarEmprestimos();
     }
+
     private void exibir() {
-    DefaultTableModel dtm = (DefaultTableModel) jTable2.getModel();
-    dtm.setNumRows(0); // Limpa a tabela
+        DefaultTableModel dtm = (DefaultTableModel) jTable2.getModel();
+        dtm.setNumRows(0); // Limpa a tabela
 
-    try {
-        // Chama o controlador para obter a lista de empréstimos
-        List<String[]> emprestimos = ctrlEmprestimo.listarEmprestimos();
+        try {
+            // Chama o controlador para obter a lista de empréstimos
+            List<String[]> emprestimos = ctrlEmprestimo.listarEmprestimos();
 
-        // Preenche a tabela com os dados retornados
-        for (String[] emprestimo : emprestimos) {
-            dtm.addRow(emprestimo);
+            // Preenche a tabela com os dados retornados
+            for (String[] emprestimo : emprestimos) {
+                dtm.addRow(emprestimo);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Erro ao listar empréstimos: " + e.getMessage());
         }
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(null, "Erro ao listar empréstimos: " + e.getMessage());
     }
-}
-
-
 
     // Função para salvar dados na tabela
-private void salvar() {
-    try {
-        // Captura os dados dos campos de texto
-        int idCliente = Integer.parseInt(txtidcliente.getText());
-        int idLivro = Integer.parseInt(txtidlivro.getText());
-        String dataEmprestimo = txtdata.getText().trim();
-        String prazoEmprestimo = txtprazo.getText().trim();
+    private void salvar() {
+        try {
+            // Captura os dados dos campos de texto
+            int idCliente = Integer.parseInt(txtidcliente.getText());
+            int idLivro = Integer.parseInt(txtidlivro.getText());
+            String dataEmprestimo = txtdata.getText().trim();
+            String prazoEmprestimo = txtprazo.getText().trim();
 
-        // Chama o controlador para salvar o empréstimo
-        ctrlEmprestimo.salvarEmprestimo(idCliente, idLivro, dataEmprestimo, prazoEmprestimo);
+            // Chama o controlador para salvar o empréstimo
+            ctrlEmprestimo.salvarEmprestimo(idCliente, idLivro, dataEmprestimo, prazoEmprestimo);
 
-        // Exibe uma mensagem de sucesso
-        JOptionPane.showMessageDialog(null, "Empréstimo salvo com sucesso.");
+            // Exibe uma mensagem de sucesso
+            JOptionPane.showMessageDialog(null, "Empréstimo salvo com sucesso.");
 
-        // Atualiza a tabela
-        buscarEmprestimos();
-    } catch (NumberFormatException e) {
-        JOptionPane.showMessageDialog(null, "Os campos ID Cliente e ID Livro devem conter apenas números.");
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(null, "Erro ao salvar empréstimo: " + e.getMessage());
+            // Atualiza a tabela
+            buscarEmprestimos();
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Os campos ID Cliente e ID Livro devem conter apenas números.");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Erro ao salvar empréstimo: " + e.getMessage());
+        }
     }
-}
-
 
     // Função para excluir na tabela
-private void excluir() {
-    String idEmprestimoTexto = txtid_emprestimo.getText().trim();
+    private void excluir() {
+        String idEmprestimoTexto = txtid_emprestimo.getText().trim();
 
-    // Verifica se o campo de ID está vazio
-    if (idEmprestimoTexto.isEmpty()) {
-        JOptionPane.showMessageDialog(null, "O campo ID do empréstimo está vazio. Por favor, preencha o campo antes de excluir.");
-        return;
-    }
-
-    try {
-        // Converte o ID para inteiro
-        int idEmprestimo = Integer.parseInt(idEmprestimoTexto);
-
-        // Chama o controlador para excluir o empréstimo
-        ctrlEmprestimo.excluirEmprestimo(idEmprestimo);
-
-        // Exibe uma mensagem de sucesso
-        JOptionPane.showMessageDialog(null, "Empréstimo excluído com sucesso.");
-
-        // Atualiza a tabela
-        exibir();
-    } catch (NumberFormatException e) {
-        JOptionPane.showMessageDialog(null, "O ID do empréstimo deve ser um número válido.");
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(null, "Erro ao excluir empréstimo: " + e.getMessage());
-    }
-}
-    
-private void buscarEmprestimos() {
-    try {
-        // Captura o ID do cliente
-        String clienteId = txtidcliente.getText().trim();
-
-        // Chama o controlador para buscar os empréstimos
-        List<String[]> emprestimos = ctrlEmprestimo.buscarEmprestimosPorClienteId(clienteId);
-
-        // Atualiza a tabela com os resultados
-        DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
-        model.setRowCount(0); // Limpa a tabela
-        for (String[] emprestimo : emprestimos) {
-            model.addRow(emprestimo);
+        // Verifica se o campo de ID está vazio
+        if (idEmprestimoTexto.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "O campo ID do empréstimo está vazio. Por favor, preencha o campo antes de excluir.");
+            return;
         }
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(null, "Erro ao buscar empréstimos: " + e.getMessage());
+
+        try {
+            // Converte o ID para inteiro
+            int idEmprestimo = Integer.parseInt(idEmprestimoTexto);
+
+            // Chama o controlador para excluir o empréstimo
+            ctrlEmprestimo.excluirEmprestimo(idEmprestimo);
+
+            // Exibe uma mensagem de sucesso
+            JOptionPane.showMessageDialog(null, "Empréstimo excluído com sucesso.");
+
+            // Atualiza a tabela
+            exibir();
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "O ID do empréstimo deve ser um número válido.");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Erro ao excluir empréstimo: " + e.getMessage());
+        }
     }
-}
-    
+
+    private void buscarEmprestimos() {
+        try {
+            // Captura o ID do cliente
+            String clienteId = txtidcliente.getText().trim();
+
+            // Chama o controlador para buscar os empréstimos
+            List<String[]> emprestimos = ctrlEmprestimo.buscarEmprestimosPorClienteId(clienteId);
+
+            // Atualiza a tabela com os resultados
+            DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
+            model.setRowCount(0); // Limpa a tabela
+            for (String[] emprestimo : emprestimos) {
+                model.addRow(emprestimo);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Erro ao buscar empréstimos: " + e.getMessage());
+        }
+    }
 
     public void limpar() {
-    txtid_emprestimo.setText(null);
-    txtidcliente.setText(null);
-    txtidlivro.setText(null);
-    txtdata.setValue(null); // Para campos formatados de data
-    txtprazo.setValue(null); // Para campos formatados de prazo
-}
+        txtid_emprestimo.setText(null);
+        txtidcliente.setText(null);
+        txtidlivro.setText(null);
+        txtdata.setValue(null); // Para campos formatados de data
+        txtprazo.setValue(null); // Para campos formatados de prazo
+    }
 
     private boolean camposVazios() {
-    return txtid_emprestimo.getText().trim().isEmpty() ||
-           txtidcliente.getText().trim().isEmpty() ||
-           txtidlivro.getText().trim().isEmpty() ||
-           txtdata.getText().trim().isEmpty() || txtdata.getValue() == null ||
-           txtprazo.getText().trim().isEmpty() || txtprazo.getValue() == null;
-}
+        return txtid_emprestimo.getText().trim().isEmpty()
+                || txtidcliente.getText().trim().isEmpty()
+                || txtidlivro.getText().trim().isEmpty()
+                || txtdata.getText().trim().isEmpty() || txtdata.getValue() == null
+                || txtprazo.getText().trim().isEmpty() || txtprazo.getValue() == null;
+    }
 
-private boolean camposVazios2() {
-    return txtid_emprestimo.getText().trim().isEmpty() &&
-           txtidcliente.getText().trim().isEmpty() &&
-           txtidlivro.getText().trim().isEmpty() &&
-           txtdata.getText().trim().isEmpty() && txtdata.getValue() == null &&
-           txtprazo.getText().trim().isEmpty() && txtprazo.getValue() == null;
-}
+    private boolean camposVazios2() {
+        return txtid_emprestimo.getText().trim().isEmpty()
+                && txtidcliente.getText().trim().isEmpty()
+                && txtidlivro.getText().trim().isEmpty()
+                && txtdata.getText().trim().isEmpty() && txtdata.getValue() == null
+                && txtprazo.getText().trim().isEmpty() && txtprazo.getValue() == null;
+    }
 
-    
- 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -200,7 +197,7 @@ private boolean camposVazios2() {
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(25, 93, 212));
-        jLabel2.setText("Buscar Emprestimo");
+        jLabel2.setText("Buscar emprestimo");
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel3.setText("ID Emprestimo");
@@ -217,6 +214,7 @@ private boolean camposVazios2() {
         jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel8.setText("Prazo de Entrega");
 
+        txtid_emprestimo.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         txtid_emprestimo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtid_emprestimoActionPerformed(evt);
@@ -228,6 +226,7 @@ private boolean camposVazios2() {
             }
         });
 
+        txtidcliente.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         txtidcliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtidclienteActionPerformed(evt);
@@ -239,6 +238,7 @@ private boolean camposVazios2() {
             }
         });
 
+        txtidlivro.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         txtidlivro.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtidlivroActionPerformed(evt);
@@ -254,7 +254,7 @@ private boolean camposVazios2() {
 
         lblEmprestimos.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         lblEmprestimos.setForeground(new java.awt.Color(255, 255, 255));
-        lblEmprestimos.setText("Histórico de emprestimos");
+        lblEmprestimos.setText("Histórico de empréstimos");
 
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -342,6 +342,7 @@ private boolean camposVazios2() {
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
+        txtdata.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         txtdata.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtdataKeyPressed(evt);
@@ -353,6 +354,7 @@ private boolean camposVazios2() {
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
+        txtprazo.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         txtprazo.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtprazoKeyPressed(evt);
@@ -471,64 +473,52 @@ private boolean camposVazios2() {
 
     private void btnvoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnvoltarActionPerformed
         // TODO add your handling code here:
-        new Clientes().setVisible(true);
+        new FRMCliente().setVisible(true);
         dispose();
     }//GEN-LAST:event_btnvoltarActionPerformed
 
     private void txtid_emprestimoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtid_emprestimoKeyPressed
         // TODO add your handling code here:
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-                    if (txtid_emprestimo.getText().trim().isEmpty()){
-                        JOptionPane.showMessageDialog(rootPane, "Por favor preencha os dados corretamente");
-                    }
-                    else{
-                       txtidcliente.requestFocus(); // Move o foco para o próximo JTextField 
-                    } 
-                }
-        else if(evt.getKeyCode() == KeyEvent.VK_DOWN){
+            if (txtid_emprestimo.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(rootPane, "Por favor preencha os dados corretamente");
+            } else {
+                txtidcliente.requestFocus(); // Move o foco para o próximo JTextField 
+            }
+        } else if (evt.getKeyCode() == KeyEvent.VK_DOWN) {
             txtidcliente.requestFocus();
-        }
-        
-        else if(evt.getKeyCode() == KeyEvent.VK_UP){
+        } else if (evt.getKeyCode() == KeyEvent.VK_UP) {
             txtprazo.requestFocus();
         }
-        
+
     }//GEN-LAST:event_txtid_emprestimoKeyPressed
 
     private void txtidclienteKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtidclienteKeyPressed
         // TODO add your handling code here:
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-                    if (txtidcliente.getText().trim().isEmpty()){
-                        JOptionPane.showMessageDialog(rootPane, "Por favor preencha os dados corretamente");
-                    }
-                    else{
-                       txtidlivro.requestFocus(); // Move o foco para o próximo JTextField 
-                    } 
-                }
-        else if(evt.getKeyCode() == KeyEvent.VK_DOWN){
+            if (txtidcliente.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(rootPane, "Por favor preencha os dados corretamente");
+            } else {
+                txtidlivro.requestFocus(); // Move o foco para o próximo JTextField 
+            }
+        } else if (evt.getKeyCode() == KeyEvent.VK_DOWN) {
             txtidlivro.requestFocus();
-        }
-        
-        else if(evt.getKeyCode() == KeyEvent.VK_UP){
+        } else if (evt.getKeyCode() == KeyEvent.VK_UP) {
             txtid_emprestimo.requestFocus();
         }
     }//GEN-LAST:event_txtidclienteKeyPressed
 
     private void txtidlivroKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtidlivroKeyPressed
         // TODO add your handling code here:
-                if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-                    if (txtidlivro.getText().trim().isEmpty()){
-                        JOptionPane.showMessageDialog(rootPane, "Por favor preencha os dados corretamente");
-                    }
-                    else{
-                       txtdata.requestFocus(); // Move o foco para o próximo JTextField 
-                    } 
-                }
-        else if(evt.getKeyCode() == KeyEvent.VK_DOWN){
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            if (txtidlivro.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(rootPane, "Por favor preencha os dados corretamente");
+            } else {
+                txtdata.requestFocus(); // Move o foco para o próximo JTextField 
+            }
+        } else if (evt.getKeyCode() == KeyEvent.VK_DOWN) {
             txtdata.requestFocus();
-        }
-        
-        else if(evt.getKeyCode() == KeyEvent.VK_UP){
+        } else if (evt.getKeyCode() == KeyEvent.VK_UP) {
             txtidcliente.requestFocus();
         }
     }//GEN-LAST:event_txtidlivroKeyPressed
@@ -536,37 +526,29 @@ private boolean camposVazios2() {
     private void txtdataKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtdataKeyPressed
         // TODO add your handling code here:
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-                    if (txtdata.getText().trim().isEmpty()|| txtdata.getValue() == null){
-                        JOptionPane.showMessageDialog(rootPane, "Por favor preencha os dados corretamente");
-                    }
-                    else{
-                       txtprazo.requestFocus(); // Move o foco para o próximo JTextField 
-                    } 
-                }
-        else if(evt.getKeyCode() == KeyEvent.VK_DOWN){
+            if (txtdata.getText().trim().isEmpty() || txtdata.getValue() == null) {
+                JOptionPane.showMessageDialog(rootPane, "Por favor preencha os dados corretamente");
+            } else {
+                txtprazo.requestFocus(); // Move o foco para o próximo JTextField 
+            }
+        } else if (evt.getKeyCode() == KeyEvent.VK_DOWN) {
             txtprazo.requestFocus();
-        }
-        
-        else if(evt.getKeyCode() == KeyEvent.VK_UP){
+        } else if (evt.getKeyCode() == KeyEvent.VK_UP) {
             txtidlivro.requestFocus();
         }
     }//GEN-LAST:event_txtdataKeyPressed
 
     private void txtprazoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtprazoKeyPressed
         // TODO add your handling code here:
-                if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-                    if (txtprazo.getText().trim().isEmpty()|| txtprazo.getValue() == null){
-                        JOptionPane.showMessageDialog(rootPane, "Por favor preencha os dados corretamente");
-                    }
-                    else{
-                       btnbuscar.requestFocus(); // Move o foco para o próximo JTextField 
-                    } 
-                }
-        else if(evt.getKeyCode() == KeyEvent.VK_DOWN){
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            if (txtprazo.getText().trim().isEmpty() || txtprazo.getValue() == null) {
+                JOptionPane.showMessageDialog(rootPane, "Por favor preencha os dados corretamente");
+            } else {
+                btnbuscar.requestFocus(); // Move o foco para o próximo JTextField 
+            }
+        } else if (evt.getKeyCode() == KeyEvent.VK_DOWN) {
             btnbuscar.requestFocus();
-        }
-        
-        else if(evt.getKeyCode() == KeyEvent.VK_UP){
+        } else if (evt.getKeyCode() == KeyEvent.VK_UP) {
             txtdata.requestFocus();
         }
     }//GEN-LAST:event_txtprazoKeyPressed
@@ -574,105 +556,75 @@ private boolean camposVazios2() {
     private void btnbuscarKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btnbuscarKeyPressed
         // TODO add your handling code here:
         if (evt.getKeyCode() == KeyEvent.VK_RIGHT) {
-                    btncadastrar.requestFocus(); // Move o foco para o próximo JTextField
-                }
-           
-           
-         else if (evt.getKeyCode() == KeyEvent.VK_LEFT) {
-                    btnremover.requestFocus(); // Move o foco para o próximo JTextField
-                }
-         
-         else if (evt.getKeyCode() == KeyEvent.VK_DOWN) {
-                    btnvoltar.requestFocus(); // Move o foco para o próximo JTextField
-                }
-         
-         else if(evt.getKeyCode() == KeyEvent.VK_UP){
+            btncadastrar.requestFocus(); // Move o foco para o próximo JTextField
+        } else if (evt.getKeyCode() == KeyEvent.VK_LEFT) {
+            btnremover.requestFocus(); // Move o foco para o próximo JTextField
+        } else if (evt.getKeyCode() == KeyEvent.VK_DOWN) {
+            btnvoltar.requestFocus(); // Move o foco para o próximo JTextField
+        } else if (evt.getKeyCode() == KeyEvent.VK_UP) {
             txtprazo.requestFocus();
+        } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            if (camposVazios()) {
+                JOptionPane.showMessageDialog(this, "Todos os campos deverão ser preenchidos");
+            }
+        } else {
+            exibir();
         }
-          
-         else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-                    if(camposVazios())
-                    JOptionPane.showMessageDialog(this, "Todos os campos deverão ser preenchidos");
-                }
-         else {
-             exibir();
-         }
     }//GEN-LAST:event_btnbuscarKeyPressed
 
     private void btncadastrarKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btncadastrarKeyPressed
         // TODO add your handling code here:
-                         if (evt.getKeyCode() == KeyEvent.VK_RIGHT) {
-                    btnremover.requestFocus(); // Move o foco para o próximo JTextField
-                }
-           
-           
-         else if (evt.getKeyCode() == KeyEvent.VK_LEFT) {
-                    btnbuscar.requestFocus(); // Move o foco para o próximo JTextField
-                }
-         
-         else if (evt.getKeyCode() == KeyEvent.VK_DOWN) {
-                    btnvoltar.requestFocus(); // Move o foco para o próximo JTextField
-                }
-         
-         else if(evt.getKeyCode() == KeyEvent.VK_UP){
+        if (evt.getKeyCode() == KeyEvent.VK_RIGHT) {
+            btnremover.requestFocus(); // Move o foco para o próximo JTextField
+        } else if (evt.getKeyCode() == KeyEvent.VK_LEFT) {
+            btnbuscar.requestFocus(); // Move o foco para o próximo JTextField
+        } else if (evt.getKeyCode() == KeyEvent.VK_DOWN) {
+            btnvoltar.requestFocus(); // Move o foco para o próximo JTextField
+        } else if (evt.getKeyCode() == KeyEvent.VK_UP) {
             txtprazo.requestFocus();
+        } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            if (camposVazios()) {
+                JOptionPane.showMessageDialog(this, "Todos os campos deverão ser preenchidos");
+            }
+        } else {
+            salvar();
         }
-          
-         else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-                    if(camposVazios())
-                    JOptionPane.showMessageDialog(this, "Todos os campos deverão ser preenchidos");
-                }
-         else {
-             salvar();
-         }
     }//GEN-LAST:event_btncadastrarKeyPressed
 
     private void btnremoverKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btnremoverKeyPressed
         // TODO add your handling code here:
         if (evt.getKeyCode() == KeyEvent.VK_RIGHT) {
-                    btnbuscar.requestFocus(); // Move o foco para o próximo JTextField
-                }
-           
-           
-         else if (evt.getKeyCode() == KeyEvent.VK_LEFT) {
-                    btncadastrar.requestFocus(); // Move o foco para o próximo JTextField
-                }
-         
-         else if (evt.getKeyCode() == KeyEvent.VK_DOWN) {
-                    btnvoltar.requestFocus(); // Move o foco para o próximo JTextField
-                }
-          
-         else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-                    if(camposVazios())
-                    JOptionPane.showMessageDialog(this, "Todos os campos deverão ser preenchidos");
-                }
-         
-         else if(evt.getKeyCode() == KeyEvent.VK_UP){
+            btnbuscar.requestFocus(); // Move o foco para o próximo JTextField
+        } else if (evt.getKeyCode() == KeyEvent.VK_LEFT) {
+            btncadastrar.requestFocus(); // Move o foco para o próximo JTextField
+        } else if (evt.getKeyCode() == KeyEvent.VK_DOWN) {
+            btnvoltar.requestFocus(); // Move o foco para o próximo JTextField
+        } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            if (camposVazios()) {
+                JOptionPane.showMessageDialog(this, "Todos os campos deverão ser preenchidos");
+            }
+        } else if (evt.getKeyCode() == KeyEvent.VK_UP) {
             txtprazo.requestFocus();
+        } else {
+            excluir();
         }
-         else {
-             excluir();
-         }
     }//GEN-LAST:event_btnremoverKeyPressed
 
     private void btnvoltarKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btnvoltarKeyPressed
         // TODO add your handling code here:
         if (evt.getKeyCode() == KeyEvent.VK_UP) {
-                    btnbuscar.requestFocus(); // Move o foco para o próximo JTextField
-                }
-        
-         else if(evt.getKeyCode() == KeyEvent.VK_ENTER){
-             new Opcoes().setVisible(true);
-             dispose();
-         }
+            btnbuscar.requestFocus(); // Move o foco para o próximo JTextField
+        } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            new FRMOpcao().setVisible(true);
+            dispose();
+        }
     }//GEN-LAST:event_btnvoltarKeyPressed
 
     public static void main(String args[]) {
 
-
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Emprestimos().setVisible(true);
+                new FRMEmprestimo().setVisible(true);
             }
         });
     }

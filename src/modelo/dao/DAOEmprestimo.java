@@ -1,123 +1,121 @@
-    package modelo.dao;
+package modelo.dao;
 
 import modelo.dto.DTOEmprestimo;
-    import visao.Emprestimos; // Importa a classe Interface
-    import java.sql.*; // Importa todos os itens da biblioteca SQL
-    import java.util.ArrayList;
-    import java.util.List;
- 
+import visao.FRMEmprestimo;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.time.*;
 
-    // Classe responsável pela interação com o banco de dados para manipular informações de empréstimos
-    public class DAOEmprestimo {
+// Classe responsável pela interação com o banco de dados para manipular informações de empréstimos
+public class DAOEmprestimo {
 
-        // Credenciais para conexão com o banco de dados
-        private final String url = "jdbc:mysql://localhost:3306/sistema_bibliotecario";
-        private final String usuario = "root";
-        private final String senha = "";
+    // Credenciais para conexão com o banco de dados
+    private final String url = "jdbc:mysql://localhost:3306/sistema_bibliotecario";
+    private final String usuario = "root";
+    private final String senha = "";
 
+    private final List<DTOEmprestimo> emprestimos = new ArrayList<>();
 
-        private final List<DTOEmprestimo> emprestimos = new ArrayList<>();
+    // Método para inserir um empréstimo
+    public void salvar(DTOEmprestimo emprestimo) {
+        // Cria uma Query para aplicar o comando INSERT no banco de dados
+        String query = "INSERT INTO emprestimos (id_cliente, id_livro, data_emprestimo, prazo_emprestimo) VALUES (?, ?, ?, ?)";
+        // Bloco try-with-resources para garantir que os recursos sejam fechados automaticamente
+        try (Connection conn = DriverManager.getConnection(url, usuario, senha);
+                PreparedStatement pst = conn.prepareStatement(query)) {
 
+            // Configura os parâmetros da consulta com os dados do empréstimo
+            pst.setInt(1, emprestimo.getIdCliente());
+            pst.setInt(2, emprestimo.getIdLivro());
+            pst.setDate(3, new java.sql.Date(emprestimo.getDataEmprestimo().getTime()));
+            pst.setDate(4, new java.sql.Date(emprestimo.getPrazoEmprestimo().getTime()));
 
-        // Método para inserir um empréstimo
-        public void salvar(DTOEmprestimo emprestimo) {
-            // Cria uma Query para aplicar o comando INSERT no banco de dados
-            String query = "INSERT INTO emprestimos (id_cliente, id_livro, data_emprestimo, prazo_emprestimo) VALUES (?, ?, ?, ?)";
-            // Bloco try-with-resources para garantir que os recursos sejam fechados automaticamente
-            try (Connection conn = DriverManager.getConnection(url, usuario, senha);
-                    PreparedStatement pst = conn.prepareStatement(query)) {
+            // Executa o comando SQL
+            pst.executeUpdate();
 
-                // Configura os parâmetros da consulta com os dados do empréstimo
-                pst.setInt(1, emprestimo.getIdCliente());
-                pst.setInt(2, emprestimo.getIdLivro());
-                pst.setDate(3, new java.sql.Date(emprestimo.getDataEmprestimo().getTime()));
-                pst.setDate(4, new java.sql.Date(emprestimo.getPrazoEmprestimo().getTime()));
-
-                // Executa o comando SQL
-                pst.executeUpdate();
-               
-            } catch (Exception e) {
+        } catch (Exception e) {
                 // Mensagem de erro em caso de falha
-             
-            }
+
         }
+    }
 
-        // Método para excluir um empréstimo
-        public void excluir(int idEmprestimo) {
-            // Cria uma Query para executar um comando no SQL para excluir um empréstimo
-            String query = "DELETE FROM emprestimos WHERE id_emprestimo = ?";
+    // Método para excluir um empréstimo
+    public void excluir(int idEmprestimo) {
+        // Cria uma Query para executar um comando no SQL para excluir um empréstimo
+        String query = "DELETE FROM emprestimos WHERE id_emprestimo = ?";
 
-            // Estrutura try catch para tratamento de erros
-            try (Connection conn = DriverManager.getConnection(url, usuario, senha);
-                    PreparedStatement pst = conn.prepareStatement(query)) {
+        // Estrutura try catch para tratamento de erros
+        try (Connection conn = DriverManager.getConnection(url, usuario, senha);
+                PreparedStatement pst = conn.prepareStatement(query)) {
 
-                // Exclui o id selecionado (com a query anterior)
-                pst.setInt(1, idEmprestimo);
-                int linhasAfetadas = pst.executeUpdate();
+            // Exclui o id selecionado (com a query anterior)
+            pst.setInt(1, idEmprestimo);
+            int linhasAfetadas = pst.executeUpdate();
 
-                // Se as linhas afetadas forem maior que 0, abre a janela para falar que o empréstimo foi excluído com sucesso
-            } catch (Exception e) {
+            // Se as linhas afetadas forem maior que 0, abre a janela para falar que o empréstimo foi excluído com sucesso
+        } catch (Exception e) {
                 // Aponta um erro ao excluir os empréstimos
-                
+
+        }
+    }
+
+    // Método para exibir empréstimos
+    public List<DTOEmprestimo> listarTodos() {
+        // Cria um array para armazenar os valores que serão pegos no SQL
+        List<DTOEmprestimo> emprestimos = new ArrayList<>();
+        // Cria uma query para executar uma consulta que seleciona os empréstimos no banco de dados
+        String query = "SELECT * FROM emprestimos";
+
+        // Estrutura try catch para tratamento de erros
+        try (Connection conn = DriverManager.getConnection(url, usuario, senha);
+                Statement st = conn.createStatement();
+                ResultSet rs = st.executeQuery(query)) {
+
+            // Enquanto a lista tiver continuidade, exiba a próxima linha da lista
+            while (rs.next()) {
+                DTOEmprestimo emprestimo = new DTOEmprestimo(
+                        rs.getInt("id_emprestimo"),
+                        rs.getInt("id_cliente"),
+                        rs.getInt("id_livro"),
+                        rs.getDate("data_emprestimo"),
+                        rs.getDate("prazo_emprestimo")
+                );
+                emprestimos.add(emprestimo);
             }
+        } catch (Exception e) {
+
         }
 
-        // Método para exibir empréstimos
-        public List<DTOEmprestimo> listarTodos() {
-            // Cria um array para armazenar os valores que serão pegos no SQL
-            List<DTOEmprestimo> emprestimos = new ArrayList<>();
-            // Cria uma query para executar uma consulta que seleciona os empréstimos no banco de dados
-            String query = "SELECT * FROM emprestimos";
+        return emprestimos;
+    }
 
-            // Estrutura try catch para tratamento de erros
-            try (Connection conn = DriverManager.getConnection(url, usuario, senha);
-                    Statement st = conn.createStatement();
-                    ResultSet rs = st.executeQuery(query)) {
+    public List<DTOEmprestimo> buscarEmprestimosPorClienteId(String clienteId) {
+        List<DTOEmprestimo> emprestimos = new ArrayList<>();
+        String sql = "SELECT * FROM emprestimos WHERE id_cliente = ?";
 
-                // Enquanto a lista tiver continuidade, exiba a próxima linha da lista
-                while (rs.next()) {
-                    DTOEmprestimo emprestimo = new DTOEmprestimo(
-                            rs.getInt("id_emprestimo"),
-                            rs.getInt("id_cliente"),
-                            rs.getInt("id_livro"),
-                            rs.getDate("data_emprestimo"),
-                            rs.getDate("prazo_emprestimo")
-                    );
-                    emprestimos.add(emprestimo);
-                }
-            } catch (Exception e) {
-               
+        try (Connection conn = DriverManager.getConnection(url, usuario, senha);
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, clienteId); // Define o parâmetro da query
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                DTOEmprestimo emprestimo = new DTOEmprestimo();
+                emprestimo.setIdEmprestimo(rs.getInt("id_emprestimo"));
+                emprestimo.setIdCliente(rs.getInt("id_cliente"));
+                emprestimo.setIdLivro(rs.getInt("id_livro"));
+                emprestimo.setDataEmprestimo(rs.getDate("data_emprestimo"));
+                emprestimo.setPrazoEmprestimo(rs.getDate("prazo_emprestimo"));
+
+                emprestimos.add(emprestimo);
             }
-
-            return emprestimos;
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
 
-        public List<DTOEmprestimo> buscarEmprestimosPorClienteId(String clienteId) {
-            List<DTOEmprestimo> emprestimos = new ArrayList<>();
-            String sql = "SELECT * FROM emprestimos WHERE id_cliente = ?";
-
-            try (Connection conn = DriverManager.getConnection(url, usuario, senha);
-                 PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-                stmt.setString(1, clienteId); // Define o parâmetro da query
-                ResultSet rs = stmt.executeQuery();
-
-                while (rs.next()) {
-                    DTOEmprestimo emprestimo = new DTOEmprestimo();
-                    emprestimo.setIdEmprestimo(rs.getInt("id_emprestimo"));
-                    emprestimo.setIdCliente(rs.getInt("id_cliente"));
-                    emprestimo.setIdLivro(rs.getInt("id_livro"));
-                    emprestimo.setDataEmprestimo(rs.getDate("data_emprestimo"));
-                    emprestimo.setPrazoEmprestimo(rs.getDate("prazo_emprestimo"));
-
-                    emprestimos.add(emprestimo);
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-
-            return emprestimos;
-        }
+        return emprestimos;
+    }
 
     //     public List<Emprestimo> listarPorCliente(String clienteId) {
     //        List<Emprestimo> resultado = new ArrayList<>();
@@ -128,4 +126,4 @@ import modelo.dto.DTOEmprestimo;
     //        }
     //        return resultado;
     //    }
-    }
+}

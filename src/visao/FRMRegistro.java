@@ -1,19 +1,23 @@
 package visao;
+
+import controle.CTRLLogin;
 import java.awt.event.KeyEvent;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
-public class Login extends javax.swing.JFrame {
 
-    public Login() {
+public class FRMRegistro extends javax.swing.JFrame {
+
+    public FRMRegistro() {
         initComponents();
         this.setResizable(false);// Define o tamanho fixo da janela
         this.setMaximumSize(getSize());// Impede a maximização
         this.setLocationRelativeTo(null);//Inicializa a janela no meio da tela
-        txtemail.requestFocus();//Seleciona o campo de texto txtemail
-        
+        txtusuario.requestFocus();//Seleciona o campo de texto txtemail
+
         setTitle("Atheanaum");//Define um tituo para a Janela
         setIconImage(new ImageIcon(getClass().getResource("/visao/Pilha_de_livros.png")).getImage());
     }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -25,11 +29,13 @@ public class Login extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         loginlabel = new javax.swing.JLabel();
         labelemail = new javax.swing.JLabel();
-        txtemail = new javax.swing.JTextField();
+        txtusuario = new javax.swing.JTextField();
         labelsenha = new javax.swing.JLabel();
         txtsenha = new javax.swing.JPasswordField();
         btnlogar = new javax.swing.JButton();
         rdnsenha = new javax.swing.JRadioButton();
+        labelemail1 = new javax.swing.JLabel();
+        txtemail = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -69,30 +75,32 @@ public class Login extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(imglivros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(201, Short.MAX_VALUE))
         );
 
         loginlabel.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         loginlabel.setForeground(new java.awt.Color(25, 93, 212));
-        loginlabel.setText("Login");
+        loginlabel.setText("Registro");
 
         labelemail.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         labelemail.setText("Email");
 
-        txtemail.addActionListener(new java.awt.event.ActionListener() {
+        txtusuario.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        txtusuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtemailActionPerformed(evt);
+                txtusuarioActionPerformed(evt);
             }
         });
-        txtemail.addKeyListener(new java.awt.event.KeyAdapter() {
+        txtusuario.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                txtemailKeyPressed(evt);
+                txtusuarioKeyPressed(evt);
             }
         });
 
         labelsenha.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         labelsenha.setText("Senha");
 
+        txtsenha.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         txtsenha.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtsenhaKeyPressed(evt);
@@ -100,7 +108,7 @@ public class Login extends javax.swing.JFrame {
         });
 
         btnlogar.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        btnlogar.setText("Logar");
+        btnlogar.setText("Registrar");
         btnlogar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnlogarActionPerformed(evt);
@@ -120,45 +128,66 @@ public class Login extends javax.swing.JFrame {
             }
         });
 
+        labelemail1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        labelemail1.setText("Usuário");
+
+        txtemail.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        txtemail.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtemailActionPerformed(evt);
+            }
+        });
+        txtemail.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtemailKeyPressed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(103, 103, 103)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(rdnsenha)
+                    .addComponent(btnlogar, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(274, 274, 274)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(39, 39, 39)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtemail, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtsenha, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(labelemail)
-                                    .addComponent(labelsenha, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(btnlogar, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                    .addGap(103, 103, 103)
-                                    .addComponent(rdnsenha))))
-                        .addContainerGap(51, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(loginlabel, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(117, 117, 117))))
+                        .addComponent(labelemail1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(loginlabel, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtsenha, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
+                            .addComponent(labelsenha, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(labelemail)
+                            .addComponent(txtemail, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
+                            .addComponent(txtusuario))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(41, 41, 41)
-                .addComponent(loginlabel, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(12, 12, 12)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(loginlabel, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(labelemail1)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(txtusuario, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(13, 13, 13)
                 .addComponent(labelemail)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtemail, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
+                .addGap(2, 2, 2)
                 .addComponent(labelsenha)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtsenha, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -167,83 +196,135 @@ public class Login extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(btnlogar, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(64, 64, 64))
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(76, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 527, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtemailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtemailActionPerformed
+    private void txtusuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtusuarioActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtemailActionPerformed
+    }//GEN-LAST:event_txtusuarioActionPerformed
 
     private void btnlogarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnlogarActionPerformed
-   
-        String email = txtemail.getText();
-        String senha = new String(txtsenha.getPassword());
+        // Coletar dados dos campos de texto
+        String usuario = txtusuario.getText().trim();
+        String email = txtemail.getText().trim();
+        String senha = new String(txtsenha.getPassword()).trim();
 
-        if (email.equals("admin") && senha.equals("1234")) {
-            JOptionPane.showMessageDialog(this, "Acesso autorizado.");
-             new Opcoes().setVisible(true);
-            this.dispose();
+        // Validar campos
+        if (usuario.isEmpty() || email.isEmpty() || senha.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Todos os campos são obrigatórios.", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Validar formato do email (simples)
+        if (!email.contains("@") || !email.contains(".")) {
+            JOptionPane.showMessageDialog(this, "Email inválido.", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Chamar o controller para cadastrar o usuário
+        CTRLLogin ctrlLogin = new CTRLLogin();
+        if (ctrlLogin.cadastrarUsuario(usuario, email, senha)) {
+            JOptionPane.showMessageDialog(this, "Usuário registrado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+            this.dispose(); // Fechar a tela de registro
+            new FRMLogin().setVisible(true); // Abrir a tela de login
         } else {
-            JOptionPane.showMessageDialog(this, "Acesso não autorizado.", "Erro", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Erro ao registrar usuário.", "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnlogarActionPerformed
 
-    private void txtemailKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtemailKeyPressed
+    private void txtusuarioKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtusuarioKeyPressed
 
-                 if (evt.getKeyCode() == KeyEvent.VK_DOWN || evt.getKeyCode() == KeyEvent.VK_ENTER) {
-                    txtsenha.requestFocus(); // Move o foco para o próximo JTextField
-                }
-    }//GEN-LAST:event_txtemailKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_DOWN || evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            txtemail.requestFocus(); // Move o foco para o próximo JTextField
+        }
+
+    }//GEN-LAST:event_txtusuarioKeyPressed
 
     private void txtsenhaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtsenhaKeyPressed
 
-                 if (evt.getKeyCode() == KeyEvent.VK_UP) {
-                    txtemail.requestFocus(); // Move o foco para o próximo JTextField
-                }
-                 
-                 else if(evt.getKeyCode() == KeyEvent.VK_DOWN){
-                     btnlogar.requestFocus();
-                 }
-                 
-                  else if(evt.getKeyCode() == KeyEvent.VK_ENTER){
-                     btnlogar.doClick();
-                 }
+        if (evt.getKeyCode() == KeyEvent.VK_UP) {
+            txtusuario.requestFocus(); // Move o foco para o próximo JTextField
+        } else if (evt.getKeyCode() == KeyEvent.VK_DOWN) {
+            btnlogar.requestFocus();
+        } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            btnlogar.doClick();
+        }
     }//GEN-LAST:event_txtsenhaKeyPressed
 
     private void rdnsenhaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdnsenhaActionPerformed
         // TODO add your handling code here:
-        if(rdnsenha.isSelected()){
-            txtsenha.setEchoChar((char)0);//define caracter como vísivel
-        }
-        else{
+        if (rdnsenha.isSelected()) {
+            txtsenha.setEchoChar((char) 0);//define caracter como vísivel
+        } else {
             txtsenha.setEchoChar('\u2022');//define padrão de caracter oculto
         }
     }//GEN-LAST:event_rdnsenhaActionPerformed
 
     private void btnlogarKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btnlogarKeyPressed
-        // TODO add your handling code here:
-         if (evt.getKeyCode() == KeyEvent.VK_UP) {
-                    txtsenha.requestFocus(); // Move o foco para o próximo JTextField
-                }
+        // Coletar dados dos campos de texto
+        String usuario = txtusuario.getText().trim();
+        String email = txtemail.getText().trim();
+        String senha = new String(txtsenha.getPassword()).trim();
+
+        // Validar campos
+        if (usuario.isEmpty() || email.isEmpty() || senha.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Todos os campos são obrigatórios.", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Validar formato do email (simples)
+        if (!email.contains("@") || !email.contains(".")) {
+            JOptionPane.showMessageDialog(this, "Email inválido.", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Chamar o controller para cadastrar o usuário
+        CTRLLogin ctrlLogin = new CTRLLogin();
+        if (ctrlLogin.cadastrarUsuario(usuario, email, senha)) {
+            JOptionPane.showMessageDialog(this, "Usuário registrado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+            this.dispose(); // Fechar a tela de registro
+            new FRMLogin().setVisible(true); // Abrir a tela de login
+        } else {
+            JOptionPane.showMessageDialog(this, "Erro ao registrar usuário.", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnlogarKeyPressed
 
+    private void txtemailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtemailActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtemailActionPerformed
+
+    private void txtemailKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtemailKeyPressed
+        // TODO add your handling code here:
+        if (evt.getKeyCode() == KeyEvent.VK_UP) {
+            txtusuario.requestFocus();
+        } else if (evt.getKeyCode() == KeyEvent.VK_DOWN) {
+            txtsenha.requestFocus();
+        } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            txtsenha.requestFocus();
+        }
+
+    }//GEN-LAST:event_txtemailKeyPressed
+
     public static void main(String args[]) {
+
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -257,14 +338,26 @@ public class Login extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FRMRegistro.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FRMRegistro.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FRMRegistro.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FRMRegistro.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
@@ -273,7 +366,7 @@ public class Login extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Login().setVisible(true);
+                new FRMRegistro().setVisible(true);
             }
         });
     }
@@ -285,12 +378,14 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JLabel labelemail;
+    private javax.swing.JLabel labelemail1;
     private javax.swing.JLabel labelnome;
     private javax.swing.JLabel labelsenha;
     private javax.swing.JLabel loginlabel;
     private javax.swing.JRadioButton rdnsenha;
     private javax.swing.JTextField txtemail;
     private javax.swing.JPasswordField txtsenha;
+    private javax.swing.JTextField txtusuario;
     // End of variables declaration//GEN-END:variables
 
     private void btnlogarActionPerformed(KeyEvent evt) {
